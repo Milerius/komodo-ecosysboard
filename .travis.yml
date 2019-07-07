@@ -12,4 +12,5 @@ script:
   - go test -json ./... > tests_log.json
 
 after_script:
+  - ls
   - curl -s https://report.ci/upload.py | python3.6 - --include='*.json' --framework=go
