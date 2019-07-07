@@ -12,10 +12,13 @@ before_install:
 
 script:
   - chmod 000 ecosysboard/config/samples/not_good_rights_config.json
-  - go test -json ./... > tests_log.json
+  - go test -json ./... > tests_log.json 2> build.log
   - bash scripts/coverage.sh
   - chmod 644 ecosysboard/config/samples/not_good_rights_config.json
 
+after_failure:
+  - curl https://raw.githubusercontent.com/report-ci/scripts/master/annotate.py | python3.6 - --tool go --input build.log
+
 after_script:
-  - curl -s https://report.ci/upload.py | python3.6 - --include='*.json' --framework=go
+  - python3.6 <(curl -s https://raw.githubusercontent.com/report-ci/scripts/master/upload.py)
   - bash <(curl -s https://codecov.io/bash)
