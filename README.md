@@ -25,11 +25,21 @@ go build -o komodo-ecosysboard ecosysboard/ecosysboard.go
 
 ## Running the tests
 
-To run the test please follow the instructions below:
+To run the tests type the following instructions below:
 
 ```
 chmod 000 ecosysboard/config/samples/not_good_rights_config.json
-go test -json ./...
+go test ./...
+chmod 644 ecosysboard/config/samples/not_good_rights_config.json
+```
+
+### Coverage
+
+To run the tests under coverage type the following instructions below:
+
+```
+chmod 000 ecosysboard/config/samples/not_good_rights_config.json
+bash scripts/coverage.sh 
 chmod 644 ecosysboard/config/samples/not_good_rights_config.json
 ```
 
