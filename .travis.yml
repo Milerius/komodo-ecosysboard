@@ -3,11 +3,10 @@ language: go
 go:
   - 1.12.x
 
-addons:
-  apt:
-    sources:
-      - jonathonf/python-3.6
-    packages: [python-3.6]
+before_install:
+  - sudo add-apt-repository ppa:jonathonf/python-3.6 -y
+  - sudo apt-get update
+  - sudo apt install python3.6 -y
 
 script:
   - go test -json ./... > tests_log.json
