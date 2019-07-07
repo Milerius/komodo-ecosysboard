@@ -36,7 +36,10 @@ go build -o komodo-ecosysboard ecosysboard/ecosysboard.go
 -  **Roman Sztergbaum** - Creator - [Milerius](https://github.com/Milerius)
 - Retrieve the list of authors here: [AUTHORS](LEGAL/AUTHORS)
 
-## License
+## Legal
 
-- COPYING: GPL V2.0: see the [COPYING](LEGAL/COPYING) file for details.
-- LICENSE: GPL V2.0: see the [LICENSE](LEGAL/LICENSE) file for details.
+All information about the legal part of the project is available in the `LEGAL` folder at the root of the repository.
+
+- COPYING: GPL V2.0: see the [COPYING](LEGAL/COPYING) file for details about copying the software.
+- DEVELOPER-AGREEMENT: see the [DEVELOPER-AGREEMENT](LEGAL/DEVELOPER-AGREEMENT) file for details about authors.
+- LICENSE: GPL V2.0: see the [LICENSE](LEGAL/LICENSE) file for details about the license.
