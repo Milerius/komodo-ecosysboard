@@ -17,30 +17,29 @@
 package config
 
 import (
-	"encoding/json"
-	"errors"
-	"io/ioutil"
-	"os"
+	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
-type Config struct {
-	HTTPPort int `json:"http_port"`
-}
-
-func LoadConfig(ConfigPath string) (*Config, error) {
-	if _, err := os.Stat(ConfigPath); os.IsNotExist(err) {
-		return nil, errors.New("configuration in the specified path doesn't exist")
+func TestLoadConfig(t *testing.T) {
+	type args struct {
+		ConfigPath string
 	}
-	file, err := ioutil.ReadFile(ConfigPath)
-	if err != nil {
-		return nil, err
+	tests := []struct {
+		name    string
+		args    args
+		want    *Config
+		wantErr bool
+	}{
+		{"Wrong path", args{"unexistent/path/"}, nil, true},
+		{"Good path", args{"config.json"}, &Config{8080}, false},
+		{"Non Complete path", args{"config/config"}, nil, true},
 	}
-
-	cfg := &Config{}
-	err = json.Unmarshal([]byte(file), cfg)
-
-	if err != nil {
-		return nil, err
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := LoadConfig(tt.args.ConfigPath)
+			assert.Equalf(t, err != nil, tt.wantErr, "LoadConfig() error = %v, wantErr %v", err, tt.wantErr)
+			assert.EqualValuesf(t, got, tt.want, "LoadConfig() = %v, want %v", got, tt.want)
+		})
 	}
-	return cfg, nil
 }
