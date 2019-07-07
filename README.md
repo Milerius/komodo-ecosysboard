@@ -16,7 +16,7 @@ To build the project please follow the instructions below:
 go build -o komodo-ecosysboard ecosysboard/ecosysboard.go
 ```
 
-### Installing
+## Installing
 
 :construction:
 
