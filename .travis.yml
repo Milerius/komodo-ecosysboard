@@ -16,4 +16,4 @@ script:
 
 after_script:
   - curl -s https://report.ci/upload.py | python3.6 - --include='*.json' --framework=go
-  - bash <(curl -s https://codecov.io/bash
+  - bash <(curl -s https://codecov.io/bash)
