@@ -34,6 +34,7 @@ go build -o komodo-ecosysboard ecosysboard/ecosysboard.go
 ## Authors
 
 -  **Roman Sztergbaum** - Creator - [Milerius](https://github.com/Milerius)
+- Retrieve the list of authors here: [AUTHORS](LEGAL/AUTHORS)
 
 ## License
 
