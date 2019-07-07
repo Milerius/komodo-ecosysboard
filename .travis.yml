@@ -11,6 +11,7 @@ before_install:
   - sudo apt install python3.6 -y
 
 script:
+  - chmod 000 ecosysboard/config/samples/not_good_rights_config.json
   - go test -json ./... > tests_log.json
   - bash scripts/coverage.sh
 

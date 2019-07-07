@@ -32,7 +32,8 @@ func TestLoadConfig(t *testing.T) {
 		wantErr bool
 	}{
 		{"Wrong path", args{"unexistent/path/"}, nil, true},
-		{"Good path", args{"config.json"}, &Config{8080}, false},
+		{"Good path", args{"samples/good_config.json"}, &Config{8080}, false},
+		{"Not enough writes", args{"samples/not_good_rights_config.json"}, nil, true},
 		{"Non Complete path", args{"config/config"}, nil, true},
 	}
 	for _, tt := range tests {
