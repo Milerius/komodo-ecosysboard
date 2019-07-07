@@ -14,6 +14,7 @@ script:
   - chmod 000 ecosysboard/config/samples/not_good_rights_config.json
   - go test -json ./... > tests_log.json
   - bash scripts/coverage.sh
+  - chmod 644 ecosysboard/config/samples/not_good_rights_config.json
 
 after_script:
   - curl -s https://report.ci/upload.py | python3.6 - --include='*.json' --framework=go
