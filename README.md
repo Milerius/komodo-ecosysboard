@@ -43,3 +43,11 @@ All information about the legal part of the project is available in the `LEGAL` 
 - COPYING: GPL V2.0: see the [COPYING](LEGAL/COPYING) file for details about copying the software.
 - DEVELOPER-AGREEMENT: see the [DEVELOPER-AGREEMENT](LEGAL/DEVELOPER-AGREEMENT) file for details about authors.
 - LICENSE: GPL V2.0: see the [LICENSE](LEGAL/LICENSE) file for details about the license.
+
+***
+
+| Badges     |                                                                                                                                                              |
+|------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Unit tests | [![badge](https://report.ci/status/Milerius/komodo-ecosysboard/badge.svg?branch=master)](https://report.ci/status/Milerius/komodo-ecosysboard?branch=master) |
+| Coverage   | [![codecov](https://codecov.io/gh/Milerius/komodo-ecosysboard/branch/master/graph/badge.svg)](https://codecov.io/gh/Milerius/komodo-ecosysboard)                                                                                                                                                              |
+|            |                                                                                                                                                              |
