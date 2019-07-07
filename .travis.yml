@@ -12,7 +12,7 @@ before_install:
 
 script:
   - chmod 000 ecosysboard/config/samples/not_good_rights_config.json
-  - go test -json ./... > tests_log.json 2> build.log
+  - go test -json ./... | grep -v "no test files" | grep -v "skip" > tests_log.json 2> build.log
   - bash scripts/coverage.sh
   - chmod 644 ecosysboard/config/samples/not_good_rights_config.json
 
