@@ -8,6 +8,9 @@ Below is the list of prerequisites to compile `komodo-ecosysboard` on your machi
 
 ## Getting Started
 
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+See deployment for notes on how to deploy the project on a live system.
+
 ### Build
 
 To build the project please follow the instructions below:
