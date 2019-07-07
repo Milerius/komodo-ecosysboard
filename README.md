@@ -37,4 +37,5 @@ go build -o komodo-ecosysboard ecosysboard/ecosysboard.go
 
 ## License
 
-GPL V2.0: see the [LICENSE](./LICENSE) file for details.
+- COPYING: GPL V2.0: see the [COPYING](LEGAL/COPYING) file for details.
+- LICENSE: GPL V2.0: see the [LICENSE](LEGAL/LICENSE) file for details.
