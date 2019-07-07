@@ -12,7 +12,7 @@ before_install:
 
 script:
   - go test -json ./... > tests_log.json
-  - ./scripts/coverage.sh
+  - bash scripts/coverage.sh
 
 after_script:
   - curl -s https://report.ci/upload.py | python3.6 - --include='*.json' --framework=go
