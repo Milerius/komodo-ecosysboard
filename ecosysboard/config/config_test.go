@@ -17,13 +17,14 @@
 package config
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
 )
 
 func TestLoadConfig(t *testing.T) {
-	_ = os.Chmod("samples/not_good_rights_config.json", 000)
+	_ = os.Chmod("samples/not_good_rights_config.json", 0000)
 	type args struct {
 		ConfigPath string
 	}
@@ -47,5 +48,8 @@ func TestLoadConfig(t *testing.T) {
 			assert.EqualValuesf(t, got, tt.want, "LoadConfig() = %v, want %v", got, tt.want)
 		})
 	}
-	_ = os.Chmod("samples/not_good_rights_config.json", 644)
+	err := os.Chmod("samples/not_good_rights_config.json", 0644)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
