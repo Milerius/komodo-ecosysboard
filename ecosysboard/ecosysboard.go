@@ -17,11 +17,11 @@
 package main
 
 import (
+	"../ecosysboard/config"
+	"../ecosysboard/log"
 	"flag"
 	"fmt"
 	"github.com/kpango/glg"
-	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
-	"github.com/milerius/komodo-ecosysboard/ecosysboard/log"
 )
 
 func main() {
