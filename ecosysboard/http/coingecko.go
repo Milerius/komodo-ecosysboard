@@ -17,13 +17,21 @@
 package http
 
 import (
-	"fmt"
 	"github.com/kpango/glg"
-	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
 	"github.com/valyala/fasthttp"
 )
 
-func LaunchServer(cfg *config.Config) {
-	router := InitRooter()
-	glg.Fatal(fasthttp.ListenAndServe(":"+fmt.Sprintf("%d", cfg.HTTPPort), router.Handler))
+func PingCoingecko(ctx *fasthttp.RequestCtx) {
+	status, body, err := fasthttp.Get(nil, CoingGeckoEndpoint+"/ping")
+	if err != nil {
+		_ = glg.Error(err)
+		ctx.SetStatusCode(status)
+		return
+	}
+	if status != 200 {
+		_ = glg.Error("status code is not 200")
+	}
+	ctx.SetStatusCode(status)
+	_, _ = ctx.Write(body)
+	_ = glg.Info("http response: ", string(body))
 }

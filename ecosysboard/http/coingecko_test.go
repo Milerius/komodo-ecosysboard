@@ -17,13 +17,17 @@
 package http
 
 import (
-	"fmt"
-	"github.com/kpango/glg"
 	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
+	"github.com/stretchr/testify/assert"
 	"github.com/valyala/fasthttp"
+	"testing"
 )
 
-func LaunchServer(cfg *config.Config) {
-	router := InitRooter()
-	glg.Fatal(fasthttp.ListenAndServe(":"+fmt.Sprintf("%d", cfg.HTTPPort), router.Handler))
+func TestPingCoingecko(t *testing.T) {
+	cfg := &config.Config{HTTPPort: 8080}
+	go LaunchServer(cfg)
+	statusCode, body, err := fasthttp.Get(nil, "http://127.0.0.1:8080/api/v1/coingecko/ping")
+	assert.EqualValuesf(t, 200, statusCode, "status code should be 200")
+	assert.Nilf(t, err, "err should be nil")
+	assert.NotEmptyf(t, body, "body should not be empty")
 }
