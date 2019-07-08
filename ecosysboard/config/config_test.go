@@ -18,10 +18,12 @@ package config
 
 import (
 	"github.com/stretchr/testify/assert"
+	"os"
 	"testing"
 )
 
 func TestLoadConfig(t *testing.T) {
+	_ = os.Chmod("samples/not_good_rights_config.json", 000)
 	type args struct {
 		ConfigPath string
 	}
@@ -36,6 +38,7 @@ func TestLoadConfig(t *testing.T) {
 		{"Not enough writes", args{"samples/not_good_rights_config.json"}, nil, true},
 		{"Not real json", args{"samples/not_real_json.json"}, nil, true},
 		{"Non Complete path", args{"config/config"}, nil, true},
+		{"Wrong Json file", args{"samples/wrong_json.json"}, nil, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -44,4 +47,5 @@ func TestLoadConfig(t *testing.T) {
 			assert.EqualValuesf(t, got, tt.want, "LoadConfig() = %v, want %v", got, tt.want)
 		})
 	}
+	_ = os.Chmod("samples/not_good_rights_config.json", 644)
 }

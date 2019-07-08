@@ -19,6 +19,7 @@ package config
 import (
 	"encoding/json"
 	"errors"
+	"github.com/google/go-cmp/cmp"
 	"io/ioutil"
 	"os"
 )
@@ -41,6 +42,10 @@ func LoadConfig(ConfigPath string) (*Config, error) {
 
 	if err != nil {
 		return nil, err
+	}
+
+	if cmp.Equal(Config{}, *cfg) {
+		return nil, errors.New("configuration seem's to be wrong, or not well-formed")
 	}
 	return cfg, nil
 }
