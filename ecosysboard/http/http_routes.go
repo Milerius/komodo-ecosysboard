@@ -18,21 +18,14 @@ package http
 
 import (
 	"github.com/fasthttp/router"
-	"github.com/valyala/fasthttp"
 )
 
 const (
 	CoingGeckoEndpoint = "https://api.coingecko.com/api/v3/"
 )
 
-func Index(ctx *fasthttp.RequestCtx) {
-	_, _ = ctx.WriteString("Welcome!")
-	ctx.SetStatusCode(200)
-}
-
 func InitRooter() *router.Router {
 	r := router.New()
-	r.GET("/", Index)
 	r.GET("/api/v1/coingecko/ping", PingCoingecko)
 	return r
 }
