@@ -14,30 +14,17 @@
  *                                                                            *
  ******************************************************************************/
 
-package main
+package log
 
 import (
-	"flag"
-	"fmt"
 	"github.com/kpango/glg"
-	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
-	"github.com/milerius/komodo-ecosysboard/ecosysboard/log"
+	"os"
 )
 
-func main() {
-	configPath := flag.String("config_path", "", "path to the configuration")
-	logsPath := flag.String("logs_path", "", "path where the logs should be stored")
-	flag.Parse()
-	if *configPath == "" || *logsPath == "" {
-		fmt.Println("config path or log path are empty, set them through the command line")
-		return
-	}
-	infolog, errlog := log.InitLogger(*logsPath)
-	defer infolog.Close()
-	defer errlog.Close()
-	cfg, err := config.LoadConfig(*configPath)
-	if err != nil {
-		glg.Fatalf("error loading configuration: %v", err)
-	}
-	_ = glg.Infof("Successfully parsed config: %v", *cfg)
+func InitLogger(logsPath string) (*os.File, *os.File) {
+	mode := int(0777)
+	infolog := glg.FileWriter(logsPath+"/komodo_ecosysboard.info.log", os.FileMode(mode))
+	errlog := glg.FileWriter(logsPath+"/komodo_ecosysboard.error.log", os.FileMode(mode))
+	glg.Get().SetMode(glg.BOTH).AddLevelWriter(glg.INFO, infolog).AddLevelWriter(glg.ERR, errlog).AddLevelWriter(glg.LOG, infolog).AddLevelWriter(glg.FATAL, errlog)
+	return infolog, errlog
 }

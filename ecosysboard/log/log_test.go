@@ -14,30 +14,15 @@
  *                                                                            *
  ******************************************************************************/
 
-package main
+package log
 
 import (
-	"flag"
-	"fmt"
-	"github.com/kpango/glg"
-	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
-	"github.com/milerius/komodo-ecosysboard/ecosysboard/log"
+	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
-func main() {
-	configPath := flag.String("config_path", "", "path to the configuration")
-	logsPath := flag.String("logs_path", "", "path where the logs should be stored")
-	flag.Parse()
-	if *configPath == "" || *logsPath == "" {
-		fmt.Println("config path or log path are empty, set them through the command line")
-		return
-	}
-	infolog, errlog := log.InitLogger(*logsPath)
-	defer infolog.Close()
-	defer errlog.Close()
-	cfg, err := config.LoadConfig(*configPath)
-	if err != nil {
-		glg.Fatalf("error loading configuration: %v", err)
-	}
-	_ = glg.Infof("Successfully parsed config: %v", *cfg)
+func TestInitLogger(t *testing.T) {
+	infolog, errlog := InitLogger("/tmp/komodo_ecosysboard_logs")
+	assert.NotNilf(t, infolog, "infolog should not be nil")
+	assert.NotNilf(t, errlog, "errlog should not be nil")
 }
