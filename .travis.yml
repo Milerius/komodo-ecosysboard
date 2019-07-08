@@ -3,7 +3,7 @@ language: go
 go:
   - 1.12.x
 
-env: [CODECOV_TOKEN="41e2a23e-79bc-4ab4-b8e0-4f7d09458d91", GO111MODULE=on]
+env: [GO111MODULE=on]
 before_install:
   - sudo add-apt-repository ppa:jonathonf/python-3.6 -y
   - sudo apt-get update
