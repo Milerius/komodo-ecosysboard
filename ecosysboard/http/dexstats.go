@@ -20,6 +20,20 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
+func GetTransactionDetailsDexstats(ctx *fasthttp.RequestCtx) {
+	coinName := ctx.UserValue("coin")
+	txId := ctx.UserValue("txid")
+	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/tx/" + txId.(string)
+	InternalExecGet(fullEndpoint, ctx)
+}
+
+func UTXODetailsDexstats(ctx *fasthttp.RequestCtx) {
+	coinName := ctx.UserValue("coin")
+	address := ctx.UserValue("address")
+	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/addrs/" + address.(string) + "/utxo"
+	InternalExecGet(fullEndpoint, ctx)
+}
+
 func AddressDetailsDexstats(ctx *fasthttp.RequestCtx) {
 	coinName := ctx.UserValue("coin")
 	addrValue := ctx.UserValue("addrstr")
