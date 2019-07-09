@@ -17,11 +17,10 @@
 package http
 
 import (
-	"testing"
-
 	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/valyala/fasthttp"
+	"testing"
 )
 
 func TestAddressDetailsDexstats(t *testing.T) {
