@@ -17,17 +17,12 @@
 package http
 
 import (
-	"github.com/fasthttp/router"
+	"github.com/valyala/fasthttp"
 )
 
-const (
-	CoingGeckoEndpoint       = "https://api.coingecko.com/api/v3/"
-	DexStatsExplorerEndpoint = ".explorer.dexstats.info/insight-api-komodo/"
-)
-
-func InitRooter() *router.Router {
-	r := router.New()
-	r.GET("/api/v1/coingecko/ping", PingCoingecko)
-	r.GET("/api/v1/dexstats/addr/:coin/:addrstr", AddressDetailsDexstats)
-	return r
+func AddressDetailsDexstats(ctx *fasthttp.RequestCtx) {
+	coinName := ctx.UserValue("coin")
+	addrValue := ctx.UserValue("addrstr")
+	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/addr/" + addrValue.(string)
+	InternalExecGet(fullEndpoint, ctx)
 }
