@@ -12,6 +12,7 @@ before_install:
 script:
   - go test -json ./... | grep -v "no test files" | grep -v "skip" > tests_log.json 2> build.log
   - cat build.log
+  - cat tests_log.json
   - bash scripts/coverage.sh
 
 after_failure:
