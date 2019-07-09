@@ -17,21 +17,10 @@
 package http
 
 import (
-	"github.com/kpango/glg"
 	"github.com/valyala/fasthttp"
 )
 
 func PingCoingecko(ctx *fasthttp.RequestCtx) {
-	status, body, err := fasthttp.Get(nil, CoingGeckoEndpoint+"/ping")
-	if err != nil {
-		_ = glg.Error(err)
-		ctx.SetStatusCode(status)
-		return
-	}
-	if status != 200 {
-		_ = glg.Error("status code is not 200")
-	}
-	ctx.SetStatusCode(status)
-	_, _ = ctx.Write(body)
-	_ = glg.Info("http response: ", string(body))
+	finalEndpoint := CoingGeckoEndpoint + "/ping"
+	InternalExecGet(finalEndpoint, ctx)
 }

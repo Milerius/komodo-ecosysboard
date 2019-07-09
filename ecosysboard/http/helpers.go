@@ -17,17 +17,21 @@
 package http
 
 import (
-	"github.com/fasthttp/router"
+	"github.com/kpango/glg"
+	"github.com/valyala/fasthttp"
 )
 
-const (
-	CoingGeckoEndpoint       = "https://api.coingecko.com/api/v3/"
-	DexStatsExplorerEndpoint = ".explorer.dexstats.info/insight-api-komodo/"
-)
-
-func InitRooter() *router.Router {
-	r := router.New()
-	r.GET("/api/v1/coingecko/ping", PingCoingecko)
-	r.GET("/api/v1/dexstats/addr/:coin/:addrstr", AddressDetailsDexstats)
-	return r
+func InternalExecGet(finalEndpoint string, ctx *fasthttp.RequestCtx) {
+	status, body, err := fasthttp.Get(nil, finalEndpoint)
+	if err != nil {
+		_ = glg.Error(err)
+		ctx.SetStatusCode(status)
+		return
+	}
+	if status != 200 {
+		_ = glg.Error("status code is not 200")
+	}
+	ctx.SetStatusCode(status)
+	_, _ = ctx.Write(body)
+	_ = glg.Info("http response: ", string(body))
 }

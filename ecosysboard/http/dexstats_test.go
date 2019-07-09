@@ -17,17 +17,17 @@
 package http
 
 import (
-	"github.com/fasthttp/router"
+	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
+	"github.com/stretchr/testify/assert"
+	"github.com/valyala/fasthttp"
+	"testing"
 )
 
-const (
-	CoingGeckoEndpoint       = "https://api.coingecko.com/api/v3/"
-	DexStatsExplorerEndpoint = ".explorer.dexstats.info/insight-api-komodo/"
-)
-
-func InitRooter() *router.Router {
-	r := router.New()
-	r.GET("/api/v1/coingecko/ping", PingCoingecko)
-	r.GET("/api/v1/dexstats/addr/:coin/:addrstr", AddressDetailsDexstats)
-	return r
+func TestAddressDetailsDexstats(t *testing.T) {
+	cfg := &config.Config{HTTPPort: 8081}
+	go LaunchServer(cfg)
+	statusCode, body, err := fasthttp.Get(nil, "http://localhost:8081/api/v1/dexstats/addr/kmd/RSp8vhyL6hN3yqn5V1qje62pBgBE9fv3Eh")
+	assert.EqualValuesf(t, 200, statusCode, "status code should be 200")
+	assert.Nilf(t, err, "err should be nil")
+	assert.NotEmptyf(t, body, "body should not be empty")
 }
