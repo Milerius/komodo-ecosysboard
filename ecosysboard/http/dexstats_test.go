@@ -22,6 +22,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/valyala/fasthttp"
 	"testing"
+	"time"
 )
 
 var port int
@@ -29,9 +30,7 @@ var strPort string
 
 func SetupTest() {
 	port = GetFirstOpenPort()
-	cfg := &config.Config{HTTPPort: port}
 	strPort = fmt.Sprintf("%d", port)
-	go LaunchServer(cfg)
 }
 
 func AddressDetailsDexstatsTest(t *testing.T) {
@@ -65,7 +64,11 @@ func UTXODetailsDexstatsTest(t *testing.T) {
 
 func TestHTTPDexstatsTestSuite(t *testing.T) {
 	SetupTest()
+	cfg := &config.Config{HTTPPort: port}
+	go LaunchServer(cfg)
 	UTXODetailsDexstatsTest(t)
+	time.Sleep(1 * time.Second)
 	GetTransactionDetailsDexstatsTest(t)
+	time.Sleep(1 * time.Second)
 	AddressDetailsDexstatsTest(t)
 }
