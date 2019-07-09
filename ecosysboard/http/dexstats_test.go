@@ -58,7 +58,7 @@ func (suite *HTTPDexstatsTestSuite) TestAddressDetailsDexstats() {
 	assert.NotEmptyf(suite.T(), body, "body should not be empty")
 }*/
 
-func (suite *HTTPDexstatsTestSuite) TestUTXODetailsDexstats() {
+/*func (suite *HTTPDexstatsTestSuite) TestUTXODetailsDexstats() {
 	statusCode, body, err := fasthttp.Get(nil, "http://127.0.0.1:"+suite.strPort+"/api/v1/dexstats/addrs/kmd/RSXGTHQSqwcMw1vowKfEE7sQ8fAmv1tmso/utxo")
 	if err != nil {
 		suite.T().Logf("err: %v", err)
@@ -66,7 +66,7 @@ func (suite *HTTPDexstatsTestSuite) TestUTXODetailsDexstats() {
 	assert.EqualValuesf(suite.T(), 200, statusCode, "status code should be 200")
 	assert.Nilf(suite.T(), err, "err should be nil")
 	assert.NotEmptyf(suite.T(), body, "body should not be empty")
-}
+}*/
 
 func TestHTTPDexstatsTestSuite(t *testing.T) {
 	suite.Run(t, new(HTTPDexstatsTestSuite))
