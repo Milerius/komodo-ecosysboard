@@ -16,31 +16,11 @@
 
 package http
 
-// #cgo CFLAGS: -O2 -Wall
-// #include "magic_port.h"
-import "C"
-
 import (
-	"github.com/kpango/glg"
-	"github.com/valyala/fasthttp"
+	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
-func GetFirstOpenPort() int {
-	port := C.get_first_open_port()
-	return int(port)
-}
-
-func InternalExecGet(finalEndpoint string, ctx *fasthttp.RequestCtx) {
-	status, body, err := fasthttp.Get(nil, finalEndpoint)
-	if err != nil {
-		_ = glg.Error(err)
-		ctx.SetStatusCode(status)
-		return
-	}
-	if status != 200 {
-		_ = glg.Error("status code is not 200")
-	}
-	ctx.SetStatusCode(status)
-	_, _ = ctx.Write(body)
-	_ = glg.Info("http response: ", string(body))
+func TestGetFirstOpenPort(t *testing.T) {
+	assert.NotEqualf(t, GetFirstOpenPort(), -1, "should not be -1")
 }
