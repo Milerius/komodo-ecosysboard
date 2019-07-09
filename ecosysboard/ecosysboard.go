@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"github.com/kpango/glg"
 	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
+	"github.com/milerius/komodo-ecosysboard/ecosysboard/http"
 	"github.com/milerius/komodo-ecosysboard/ecosysboard/log"
 )
 
@@ -40,4 +41,5 @@ func main() {
 		glg.Fatalf("error loading configuration: %v", err)
 	}
 	_ = glg.Infof("Successfully parsed config: %v", *cfg)
+	http.LaunchServer(cfg)
 }

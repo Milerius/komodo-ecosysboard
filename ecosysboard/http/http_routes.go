@@ -17,13 +17,15 @@
 package http
 
 import (
-	"fmt"
-	"github.com/kpango/glg"
-	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
-	"github.com/valyala/fasthttp"
+	"github.com/fasthttp/router"
 )
 
-func LaunchServer(cfg *config.Config) {
-	router := InitRooter()
-	glg.Fatal(fasthttp.ListenAndServe(":"+fmt.Sprintf("%d", cfg.HTTPPort), router.Handler))
+const (
+	CoingGeckoEndpoint = "https://api.coingecko.com/api/v3/"
+)
+
+func InitRooter() *router.Router {
+	r := router.New()
+	r.GET("/api/v1/coingecko/ping", PingCoingecko)
+	return r
 }
