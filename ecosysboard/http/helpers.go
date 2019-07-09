@@ -42,6 +42,5 @@ func InternalExecGet(finalEndpoint string, ctx *fasthttp.RequestCtx) {
 	}
 	ctx.SetStatusCode(status)
 	_, _ = ctx.Write(body)
-	//_ = glg.Info("http response: ", string(body))
-	//fmt.Println(len(string(body)))
+	_ = glg.Info("http response: ", string(body))
 }
