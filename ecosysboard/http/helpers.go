@@ -21,7 +21,6 @@ package http
 import "C"
 
 import (
-	"fmt"
 	"github.com/kpango/glg"
 	"github.com/valyala/fasthttp"
 )
@@ -43,6 +42,6 @@ func InternalExecGet(finalEndpoint string, ctx *fasthttp.RequestCtx) {
 	}
 	ctx.SetStatusCode(status)
 	_, _ = ctx.Write(body)
-	_ = glg.Info("http response: ", string(body))
-	fmt.Println(len(body))
+	//_ = glg.Info("http response: ", string(body))
+	//fmt.Println(len(body))
 }
