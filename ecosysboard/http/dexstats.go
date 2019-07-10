@@ -40,3 +40,17 @@ func AddressDetailsDexstats(ctx *fasthttp.RequestCtx) {
 	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/addr/" + addrValue.(string)
 	InternalExecGet(fullEndpoint, ctx)
 }
+
+func TransactionByBlockDexstats(ctx *fasthttp.RequestCtx) {
+	coinName := ctx.UserValue("coin")
+	hashName := ctx.UserValue("hash")
+	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/txs?block=" + hashName.(string)
+	InternalExecGet(fullEndpoint, ctx)
+}
+
+func TransactionByAddressDexstats(ctx *fasthttp.RequestCtx) {
+	coinName := ctx.UserValue("coin")
+	addressName := ctx.UserValue("address")
+	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/txs?address=" + addressName.(string)
+	InternalExecGet(fullEndpoint, ctx)
+}

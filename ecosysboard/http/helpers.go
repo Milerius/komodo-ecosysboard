@@ -31,6 +31,7 @@ func GetFirstOpenPort() int {
 }
 
 func InternalExecGet(finalEndpoint string, ctx *fasthttp.RequestCtx) {
+	_ = glg.Debugf("full request: %s", finalEndpoint)
 	status, body, err := fasthttp.Get(nil, finalEndpoint)
 	if err != nil {
 		_ = glg.Error(err)
