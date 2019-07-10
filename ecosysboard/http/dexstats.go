@@ -62,6 +62,25 @@ func BlockHashFromHeightDexstats(ctx *fasthttp.RequestCtx) {
 	InternalExecGet(fullEndpoint, ctx)
 }
 
+func DiagnosticInfoFromNodeDexstats(ctx *fasthttp.RequestCtx) {
+	coinName := ctx.UserValue("coin")
+	query := ctx.UserValue("query")
+	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/status?:q=" + query.(string)
+	InternalExecGet(fullEndpoint, ctx)
+}
+
+func NodeSyncStatusDexstats(ctx *fasthttp.RequestCtx) {
+	coinName := ctx.UserValue("coin")
+	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/sync"
+	InternalExecGet(fullEndpoint, ctx)
+}
+
+func NodePeerStatusDexstats(ctx *fasthttp.RequestCtx) {
+	coinName := ctx.UserValue("coin")
+	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/peer"
+	InternalExecGet(fullEndpoint, ctx)
+}
+
 func BlockDetailsDexstats(ctx *fasthttp.RequestCtx) {
 	coinName := ctx.UserValue("coin")
 	hashName := ctx.UserValue("hash")

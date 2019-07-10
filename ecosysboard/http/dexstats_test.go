@@ -70,6 +70,27 @@ func (suite *HTTPDexstatsTestSuite) TestBlockHashFromHeightDexstats() {
 	suite.finalizeTest(err, statusCode, body)
 }
 
+func (suite *HTTPDexstatsTestSuite) TestNodeSyncStatusDexstats() {
+	statusCode, body, err := fasthttp.Get(nil, "http://127.0.0.1:"+suite.strPort+"/api/v1/dexstats/kmd/sync")
+	suite.finalizeTest(err, statusCode, body)
+}
+
+func (suite *HTTPDexstatsTestSuite) TestNodePeerStatusDexstats() {
+	statusCode, body, err := fasthttp.Get(nil, "http://127.0.0.1:"+suite.strPort+"/api/v1/dexstats/kmd/peer")
+	suite.finalizeTest(err, statusCode, body)
+}
+
+func (suite *HTTPDexstatsTestSuite) TestDiagnosticInfoFromNodeDexstats() {
+	statusCode, body, err := fasthttp.Get(nil, "http://127.0.0.1:"+suite.strPort+"/api/v1/dexstats/kmd/status/getInfo")
+	suite.finalizeTest(err, statusCode, body)
+	statusCode, body, err = fasthttp.Get(nil, "http://127.0.0.1:"+suite.strPort+"/api/v1/dexstats/kmd/status/getDifficulty")
+	suite.finalizeTest(err, statusCode, body)
+	statusCode, body, err = fasthttp.Get(nil, "http://127.0.0.1:"+suite.strPort+"/api/v1/dexstats/kmd/status/getBestBlockHash")
+	suite.finalizeTest(err, statusCode, body)
+	statusCode, body, err = fasthttp.Get(nil, "http://127.0.0.1:"+suite.strPort+"/api/v1/dexstats/kmd/status/getLastBlockHash")
+	suite.finalizeTest(err, statusCode, body)
+}
+
 func (suite *HTTPDexstatsTestSuite) TestTransactionByAddressDexstats() {
 	statusCode, body, err := fasthttp.Get(nil, "http://127.0.0.1:"+suite.strPort+"/api/v1/dexstats/kmd/txsaddress/RMbNsa4Nf3BAd16BQaAAmfzAgnuorUDrCr")
 	suite.finalizeTest(err, statusCode, body)

@@ -35,5 +35,8 @@ func InitRooter() *router.Router {
 	r.GET("/api/v1/dexstats/:coin/txsaddress/:address", TransactionByAddressDexstats)
 	r.GET("/api/v1/dexstats/:coin/block/:hash", BlockDetailsDexstats)
 	r.GET("/api/v1/dexstats/:coin/block-index/:blockheight", BlockHashFromHeightDexstats)
+	r.GET("/api/v1/dexstats/:coin/status/:query", DiagnosticInfoFromNodeDexstats)
+	r.GET("/api/v1/dexstats/:coin/sync", NodeSyncStatusDexstats)
+	r.GET("/api/v1/dexstats/:coin/peer", NodePeerStatusDexstats)
 	return r
 }
