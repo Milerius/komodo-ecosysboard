@@ -16,10 +16,19 @@
 
 package http
 
+// #cgo CFLAGS: -O2 -Wall
+// #include "magic_port.h"
+import "C"
+
 import (
 	"github.com/kpango/glg"
 	"github.com/valyala/fasthttp"
 )
+
+func GetFirstOpenPort() int {
+	port := C.get_first_open_port()
+	return int(port)
+}
 
 func InternalExecGet(finalEndpoint string, ctx *fasthttp.RequestCtx) {
 	status, body, err := fasthttp.Get(nil, finalEndpoint)

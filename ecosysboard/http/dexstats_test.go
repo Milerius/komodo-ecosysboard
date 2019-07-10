@@ -17,17 +17,59 @@
 package http
 
 import (
+	"fmt"
+	"testing"
+	"time"
+
 	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/suite"
 	"github.com/valyala/fasthttp"
-	"testing"
 )
 
-func TestAddressDetailsDexstats(t *testing.T) {
-	cfg := &config.Config{HTTPPort: 8081}
+type HTTPDexstatsTestSuite struct {
+	suite.Suite
+	strPort string
+}
+
+func (suite *HTTPDexstatsTestSuite) SetupTest() {
+	port := GetFirstOpenPort()
+	cfg := &config.Config{HTTPPort: port}
+	suite.strPort = fmt.Sprintf("%d", port)
 	go LaunchServer(cfg)
-	statusCode, body, err := fasthttp.Get(nil, "http://localhost:8081/api/v1/dexstats/addr/kmd/RSp8vhyL6hN3yqn5V1qje62pBgBE9fv3Eh")
-	assert.EqualValuesf(t, 200, statusCode, "status code should be 200")
-	assert.Nilf(t, err, "err should be nil")
-	assert.NotEmptyf(t, body, "body should not be empty")
+	time.Sleep(3 * time.Second)
+}
+
+func (suite *HTTPDexstatsTestSuite) TestAddressDetailsDexstats() {
+	statusCode, body, err := fasthttp.Get(nil, "http://127.0.0.1:"+suite.strPort+"/api/v1/dexstats/addr/kmd/RSp8vhyL6hN3yqn5V1qje62pBgBE9fv3Eh")
+	if err != nil {
+		suite.T().Logf("err: %v", err)
+	}
+	assert.EqualValuesf(suite.T(), 200, statusCode, "status code should be 200")
+	assert.Nilf(suite.T(), err, "err should be nil")
+	assert.NotEmptyf(suite.T(), body, "body should not be empty")
+}
+
+func (suite *HTTPDexstatsTestSuite) TestGetTransactionDetailsDexstats() {
+	statusCode, body, err := fasthttp.Get(nil, "http://127.0.0.1:"+suite.strPort+"/api/v1/dexstats/tx/kmd/11ef4a504b4b5573bf9311c9f84e263f5535ec8a671e79d746769bda4b83fcb1")
+	if err != nil {
+		suite.T().Logf("err: %v", err)
+	}
+	assert.EqualValuesf(suite.T(), 200, statusCode, "status code should be 200")
+	assert.Nilf(suite.T(), err, "err should be nil")
+	assert.NotEmptyf(suite.T(), body, "body should not be empty")
+}
+
+func (suite *HTTPDexstatsTestSuite) TestUTXODetailsDexstats() {
+	statusCode, body, err := fasthttp.Get(nil, "http://127.0.0.1:"+suite.strPort+"/api/v1/dexstats/addrs/kmd/RSXGTHQSqwcMw1vowKfEE7sQ8fAmv1tmso/utxo")
+	if err != nil {
+		suite.T().Logf("err: %v", err)
+	}
+	assert.EqualValuesf(suite.T(), 200, statusCode, "status code should be 200")
+	assert.Nilf(suite.T(), err, "err should be nil")
+	assert.NotEmptyf(suite.T(), body, "body should not be empty")
+}
+
+func TestHTTPDexstatsTestSuite(t *testing.T) {
+	suite.Run(t, new(HTTPDexstatsTestSuite))
 }

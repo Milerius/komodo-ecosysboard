@@ -17,26 +17,10 @@
 package http
 
 import (
-	"github.com/valyala/fasthttp"
+	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
-func GetTransactionDetailsDexstats(ctx *fasthttp.RequestCtx) {
-	coinName := ctx.UserValue("coin")
-	txId := ctx.UserValue("txid")
-	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/tx/" + txId.(string)
-	InternalExecGet(fullEndpoint, ctx)
-}
-
-func UTXODetailsDexstats(ctx *fasthttp.RequestCtx) {
-	coinName := ctx.UserValue("coin")
-	address := ctx.UserValue("address")
-	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/addrs/" + address.(string) + "/utxo"
-	InternalExecGet(fullEndpoint, ctx)
-}
-
-func AddressDetailsDexstats(ctx *fasthttp.RequestCtx) {
-	coinName := ctx.UserValue("coin")
-	addrValue := ctx.UserValue("addrstr")
-	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/addr/" + addrValue.(string)
-	InternalExecGet(fullEndpoint, ctx)
+func TestGetFirstOpenPort(t *testing.T) {
+	assert.NotEqualf(t, GetFirstOpenPort(), -1, "should not be -1")
 }
