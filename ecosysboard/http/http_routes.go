@@ -33,5 +33,7 @@ func InitRooter() *router.Router {
 	r.GET("/api/v1/dexstats/:coin/addrs/:address/utxo", UTXODetailsDexstats)
 	r.GET("/api/v1/dexstats/:coin/txsblock/:hash", TransactionByBlockDexstats)
 	r.GET("/api/v1/dexstats/:coin/txsaddress/:address", TransactionByAddressDexstats)
+	r.GET("/api/v1/dexstats/:coin/block/:hash", BlockDetailsDexstats)
+	r.GET("/api/v1/dexstats/:coin/block-index/:blockheight", BlockHashFromHeightDexstats)
 	return r
 }

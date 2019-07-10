@@ -60,6 +60,16 @@ func (suite *HTTPDexstatsTestSuite) TestTransactionByBlockDexstats() {
 	suite.finalizeTest(err, statusCode, body)
 }
 
+func (suite *HTTPDexstatsTestSuite) TestBlockDetailsDexstats() {
+	statusCode, body, err := fasthttp.Get(nil, "http://127.0.0.1:"+suite.strPort+"/api/v1/dexstats/kmd/block/0b8c2a49d20fa270324c494e9019b11cfdc81eb90611072c61d1934bcda4de41")
+	suite.finalizeTest(err, statusCode, body)
+}
+
+func (suite *HTTPDexstatsTestSuite) TestBlockHashFromHeightDexstats() {
+	statusCode, body, err := fasthttp.Get(nil, "http://127.0.0.1:"+suite.strPort+"/api/v1/dexstats/kmd/block-index/1436987")
+	suite.finalizeTest(err, statusCode, body)
+}
+
 func (suite *HTTPDexstatsTestSuite) TestTransactionByAddressDexstats() {
 	statusCode, body, err := fasthttp.Get(nil, "http://127.0.0.1:"+suite.strPort+"/api/v1/dexstats/kmd/txsaddress/RMbNsa4Nf3BAd16BQaAAmfzAgnuorUDrCr")
 	suite.finalizeTest(err, statusCode, body)
