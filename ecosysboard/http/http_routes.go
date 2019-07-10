@@ -28,8 +28,10 @@ const (
 func InitRooter() *router.Router {
 	r := router.New()
 	r.GET("/api/v1/coingecko/ping", PingCoingecko)
-	r.GET("/api/v1/dexstats/addr/:coin/:addrstr", AddressDetailsDexstats)
-	r.GET("/api/v1/dexstats/tx/:coin/:txid", GetTransactionDetailsDexstats)
-	r.GET("/api/v1/dexstats/addrs/:coin/:address/utxo", UTXODetailsDexstats)
+	r.GET("/api/v1/dexstats/:coin/addr/:addrstr", AddressDetailsDexstats)
+	r.GET("/api/v1/dexstats/:coin/tx/:txid", GetTransactionDetailsDexstats)
+	r.GET("/api/v1/dexstats/:coin/addrs/:address/utxo", UTXODetailsDexstats)
+	r.GET("/api/v1/dexstats/:coin/txsblock/:hash", TransactionByBlockDexstats)
+	r.GET("/api/v1/dexstats/:coin/txsaddress/:address", TransactionByAddressDexstats)
 	return r
 }
