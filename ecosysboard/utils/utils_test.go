@@ -17,12 +17,25 @@
 package utils
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestIsKomodoAddress(t *testing.T) {
-	assert.Truef(t, IsKomodoAddress("RM5wffThEVKQdG98uLa2gc8Nk4CzX9Fq4q"), "should be true")
-	assert.Truef(t, IsKomodoAddress("RXrQPqU4SwARri1m2n7232TDECvjzXCJh4"), "should be true")
-	assert.False(t, IsKomodoAddress("BXrQPqU4SwARri1m2n7232TDECvjzXCJh4"), "should be false")
+	assert.Truef(t, IsLookLikeAKomodoAddress("RM5wffThEVKQdG98uLa2gc8Nk4CzX9Fq4q"), "should be true")
+	assert.Truef(t, IsLookLikeAKomodoAddress("RXrQPqU4SwARri1m2n7232TDECvjzXCJh4"), "should be true")
+	assert.Falsef(t, IsLookLikeAKomodoAddress("BXrQPqU4SwARri1m2n7232TDECvjzXCJh4"), "should be false")
+}
+
+func TestIsBlock(t *testing.T) {
+	assert.Truef(t, IsLookLikeABlock("123456"), "should be true")
+	assert.Truef(t, IsLookLikeABlock("123456"), "should be true")
+	assert.Falsef(t, IsLookLikeABlock("RXrQPqU4SwARri1m2n7232TDECvjzXCJh4"), "should be false")
+}
+
+func TestIsLookLikeABlockHashOrTransactionId(t *testing.T) {
+	assert.Truef(t, IsLookLikeABlockHashOrTransactionId("000000014c0797b609abef168e8df13c03b92415f3a9b00c9f583013b5824b06"), "should be true")
+	assert.Truef(t, IsLookLikeABlockHashOrTransactionId("2909f0b98ca4c3812bb500bc79fa83d3b8c8159c8f4328ac80777968f59400c7"), "should be true")
+	assert.Falsef(t, IsLookLikeABlockHashOrTransactionId("RXrQPqU4SwARri1m2n7232TDECvjzXCJh4"), "should be false")
 }
