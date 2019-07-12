@@ -38,5 +38,6 @@ func InitRooter() *router.Router {
 	r.GET("/api/v1/dexstats/:coin/status/:query", DiagnosticInfoFromNodeDexstats)
 	r.GET("/api/v1/dexstats/:coin/sync", NodeSyncStatusDexstats)
 	r.GET("/api/v1/dexstats/:coin/peer", NodePeerStatusDexstats)
+	r.POST("/api/v1/dexstats/:coin/search", SearchOnDexstats)
 	return r
 }

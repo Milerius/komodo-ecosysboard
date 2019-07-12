@@ -18,6 +18,8 @@ package http
 
 import (
 	"fmt"
+	"net/http"
+	"strconv"
 	"testing"
 	"time"
 
@@ -37,7 +39,7 @@ func (suite *HTTPDexstatsTestSuite) SetupTest() {
 	cfg := &config.Config{HTTPPort: port}
 	suite.strPort = fmt.Sprintf("%d", port)
 	go LaunchServer(cfg)
-	time.Sleep(3 * time.Second)
+	time.Sleep(10 * time.Millisecond)
 }
 
 func (suite *HTTPDexstatsTestSuite) TestAddressDetailsDexstats() {
@@ -89,6 +91,49 @@ func (suite *HTTPDexstatsTestSuite) TestDiagnosticInfoFromNodeDexstats() {
 	suite.finalizeTest(err, statusCode, body)
 	statusCode, body, err = fasthttp.Get(nil, "http://127.0.0.1:"+suite.strPort+"/api/v1/dexstats/kmd/status/getLastBlockHash")
 	suite.finalizeTest(err, statusCode, body)
+}
+
+func (suite *HTTPDexstatsTestSuite) TestSearchOnDexstats() {
+	//fasthttp.Pos
+	config.GConfig = new(config.Config)
+	value, _ := strconv.Atoi(suite.strPort)
+	config.GConfig.HTTPPort = value
+	client := fasthttp.Client{}
+	type args struct {
+		Input string
+	}
+	tests := []struct {
+		name            string
+		args            args
+		expected_status int
+		body_contains   string
+	}{
+		{"Fake input", args{`bad input`}, http.StatusBadRequest, ""},
+		{"Another fake input", args{`{"input": "fake input"}`}, http.StatusBadRequest, ""},
+		{"Search block by valid block height", args{`{"input": "1439517"}`}, http.StatusOK, "block"},
+		{"Search block by invalid block height", args{`{"input": "2439517"}`}, http.StatusBadRequest, ""},
+		{"Search valid block by block hash", args{`{"input": "06d6747a49097830574cf8d33e399d8a8679e457493cd17390a80d0f916287bc"}`}, http.StatusOK, "block"},
+		{"Search non existent block by block hash", args{`{"input": "0c64df81b9a66ca7882fd2b7968b562aa5394789aa0ab8444fb159862514b336"}`}, http.StatusNotFound, ""},
+		{"Search valid address", args{`{"input": "RKdXYhrQxB3LtwGpysGenKFHFTqSi5g7EF"}`}, http.StatusOK, "address"},
+		{"Search valid transaction", args{`{"input": "8b9478ddd6c3cae81fce0db9bb25fadece76e403eb5470c0515be99139b52042"}`}, http.StatusOK, "tx"},
+		{"Search non existent transaction", args{`{"input": "8b9478ddd6c3cae81fce0db9bb25fadece76e403eb5470c0515be99139b52043"}`}, http.StatusNotFound, ""},
+	}
+	for _, tt := range tests {
+		req := fasthttp.AcquireRequest()
+		req.URI().Update("http://127.0.0.1:" + suite.strPort + "/api/v1/dexstats/kmd/search")
+		req.Header.Add("Content-Type", "application/json")
+		req.Header.SetMethod("POST")
+		req.SetBodyString(tt.args.Input)
+		res := fasthttp.AcquireResponse()
+		_ = client.Do(req, res)
+		suite.T().Logf("resp: %s", string(res.Body()))
+		assert.EqualValues(suite.T(), tt.expected_status, res.StatusCode())
+		if len(tt.body_contains) > 0 {
+			assert.Containsf(suite.T(), string(res.Body()), tt.body_contains, "should contains: %s", tt.body_contains)
+		}
+		fasthttp.ReleaseRequest(req)
+		fasthttp.ReleaseResponse(res)
+	}
 }
 
 func (suite *HTTPDexstatsTestSuite) TestTransactionByAddressDexstats() {
