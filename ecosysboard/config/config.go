@@ -28,6 +28,8 @@ type Config struct {
 	HTTPPort int `json:"http_port"`
 }
 
+var GConfig *Config
+
 func LoadConfig(ConfigPath string) (*Config, error) {
 	if _, err := os.Stat(ConfigPath); os.IsNotExist(err) {
 		return nil, errors.New("configuration in the specified path doesn't exist")
@@ -47,5 +49,6 @@ func LoadConfig(ConfigPath string) (*Config, error) {
 	if cmp.Equal(Config{}, *cfg) {
 		return nil, errors.New("configuration seem's to be wrong, or not well-formed")
 	}
+	GConfig = cfg
 	return cfg, nil
 }
