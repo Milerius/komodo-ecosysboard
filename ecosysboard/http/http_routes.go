@@ -22,12 +22,17 @@ import (
 
 const (
 	CoingGeckoEndpoint       = "https://api.coingecko.com/api/v3/"
+	CoinpaprikaEndpoint      = "https://api.coinpaprika.com/v1/"
 	DexStatsExplorerEndpoint = ".explorer.dexstats.info/insight-api-komodo/"
 )
 
 func InitRooter() *router.Router {
 	r := router.New()
+
+	//! Coingecko
 	r.GET("/api/v1/coingecko/ping", PingCoingecko)
+
+	//! Dexstats
 	r.GET("/api/v1/dexstats/:coin/addr/:addrstr", AddressDetailsDexstats)
 	r.GET("/api/v1/dexstats/:coin/tx/:txid", GetTransactionDetailsDexstats)
 	r.GET("/api/v1/dexstats/:coin/addrs/:address/utxo", UTXODetailsDexstats)
@@ -39,5 +44,8 @@ func InitRooter() *router.Router {
 	r.GET("/api/v1/dexstats/:coin/sync", NodeSyncStatusDexstats)
 	r.GET("/api/v1/dexstats/:coin/peer", NodePeerStatusDexstats)
 	r.POST("/api/v1/dexstats/:coin/search", SearchOnDexstats)
+
+	//! Coinpaprika
+	r.GET("/api/v1/coinpaprika/tickers", TickersCoinpaprika)
 	return r
 }
