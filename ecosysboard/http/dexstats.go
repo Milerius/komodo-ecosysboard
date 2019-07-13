@@ -83,7 +83,7 @@ func BlockHashFromHeightDexstats(ctx *fasthttp.RequestCtx) {
 func DiagnosticInfoFromNodeDexstats(ctx *fasthttp.RequestCtx) {
 	coinName := ctx.UserValue("coin")
 	query := ctx.UserValue("query")
-	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/status?:q=" + query.(string)
+	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/status?q=" + query.(string)
 	InternalExecGet(fullEndpoint, ctx, true)
 }
 
