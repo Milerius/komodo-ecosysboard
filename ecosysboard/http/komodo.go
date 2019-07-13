@@ -22,6 +22,7 @@ import (
 	"github.com/valyala/fasthttp"
 	"net/http"
 	"strings"
+	"sync"
 )
 
 var komodoCoinsToCoinpaprikaRegistry = map[string]string{
@@ -35,13 +36,19 @@ var komodoCoinsToCoinpaprikaRegistry = map[string]string{
 
 func TickersKomodoEcosystem(ctx *fasthttp.RequestCtx) {
 	tickers := []CoinpaprikaTickerData{}
+	var wg sync.WaitGroup
+	wg.Add(len(komodoCoinsToCoinpaprikaRegistry))
 	for key, value := range komodoCoinsToCoinpaprikaRegistry {
-		res := CTickerCoinpaprika(value)
-		if value == "test coin" || res.Symbol == "" {
-			res.Symbol = strings.ToUpper(key)
-		}
-		tickers = append(tickers, *res)
+		go func(key string, value string) {
+			defer wg.Done()
+			res := CTickerCoinpaprika(value)
+			if value == "test coin" || res.Symbol == "" {
+				res.Symbol = strings.ToUpper(key)
+			}
+			tickers = append(tickers, *res)
+		}(key, value)
 	}
+	wg.Wait()
 	if len(tickers) == 0 {
 		ctx.SetStatusCode(http.StatusBadRequest)
 		return
