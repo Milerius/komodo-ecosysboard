@@ -16,30 +16,47 @@
 
 package http
 
-// #cgo CFLAGS: -O2 -Wall
-// #include "magic_port.h"
-import "C"
-
 import (
-	"github.com/kpango/glg"
+	"fmt"
+	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/suite"
 	"github.com/valyala/fasthttp"
+	"testing"
+	"time"
 )
 
-func GetFirstOpenPort() int {
-	port := C.get_first_open_port()
-	return int(port)
-}
-
-func InternalExecGet(finalEndpoint string, ctx *fasthttp.RequestCtx) {
+func (suite *HTTPCoinpaprikaTestSuite) finalizeTests(url string) {
 	client := fasthttp.Client{}
 	req := fasthttp.AcquireRequest()
 	req.Header.SetMethod("GET")
-	req.URI().Update(finalEndpoint)
+	req.URI().Update(url)
 	res := fasthttp.AcquireResponse()
 	_ = client.Do(req, res)
-	ctx.SetStatusCode(res.StatusCode())
-	ctx.SetBodyString(string(res.Body()))
-	_ = glg.Debugf("http response: %s", string(res.Body()))
+	suite.T().Logf("http response: %s", string(res.Body()))
+	assert.EqualValuesf(suite.T(), 200, res.StatusCode(), "status code should be 200")
+	assert.NotEmptyf(suite.T(), res.Body(), "body should not be empty")
 	fasthttp.ReleaseRequest(req)
 	fasthttp.ReleaseResponse(res)
+}
+
+type HTTPCoinpaprikaTestSuite struct {
+	suite.Suite
+	strPort string
+}
+
+func (suite *HTTPCoinpaprikaTestSuite) SetupTest() {
+	port := GetFirstOpenPort()
+	cfg := &config.Config{HTTPPort: port}
+	suite.strPort = fmt.Sprintf("%d", port)
+	go LaunchServer(cfg)
+	time.Sleep(10 * time.Millisecond)
+}
+
+func (suite *HTTPCoinpaprikaTestSuite) TestTickersCoinpaprika() {
+	suite.finalizeTests("http://127.0.0.1:" + suite.strPort + "/api/v1/coinpaprika/tickers")
+}
+
+func TestHTTPCoinpaprikaTestSuite(t *testing.T) {
+	suite.Run(t, new(HTTPCoinpaprikaTestSuite))
 }
