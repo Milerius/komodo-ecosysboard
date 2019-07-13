@@ -33,29 +33,31 @@ type CoinInfos struct {
 }
 
 func AllInformationsKomodoEcosystem(ctx *fasthttp.RequestCtx) {
-	tickers := make([]CoinpaprikaTickerData, 0, len(config.GConfig.Coins))
+	coinInfos := make([]CoinInfos, 0, len(config.GConfig.Coins))
 	mutex := sync.RWMutex{}
 	var wg sync.WaitGroup
 	wg.Add(len(config.GConfig.Coins))
 	for _, value := range config.GConfig.Coins {
 		go func(key string, value string) {
+			currentCoin := CoinInfos{}
 			defer wg.Done()
 			res := CTickerCoinpaprika(value)
 			if value == "test coin" || res.Symbol == "" {
 				res.Symbol = strings.ToUpper(key)
 			}
+			currentCoin.Ticker = *res
 			mutex.Lock()
-			tickers = append(tickers, *res)
+			coinInfos = append(coinInfos, currentCoin)
 			mutex.Unlock()
 		}(value.Coin, value.CoinPaprikaID)
 	}
 	wg.Wait()
-	if len(tickers) == 0 {
+	if len(coinInfos) == 0 {
 		ctx.SetStatusCode(http.StatusBadRequest)
 		return
 	}
-	_ = glg.Debug("tickers komodo: %v", tickers)
+	_ = glg.Debug("coinInfos komodo: %v", coinInfos)
 	ctx.SetStatusCode(200)
-	jsonTicker, _ := json.Marshal(tickers)
+	jsonTicker, _ := json.Marshal(coinInfos)
 	ctx.SetBodyString(string(jsonTicker))
 }
