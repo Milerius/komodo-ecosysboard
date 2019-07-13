@@ -22,6 +22,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"github.com/valyala/fasthttp"
+	"os"
+	"path/filepath"
 	"testing"
 	"time"
 )
@@ -48,6 +50,11 @@ func (suite *HTTPKomodoTestSuite) finalizeTests(url string) {
 }
 
 func (suite *HTTPKomodoTestSuite) SetupTest() {
+	dir, _ := os.Getwd()
+	parent := filepath.Dir(dir)
+	_, err := config.LoadConfig(parent + "/config/samples/good_config.json")
+	assert.Nil(suite.T(), err, "should be nil ")
+	suite.T().Logf("dir: %s", dir)
 	port := GetFirstOpenPort()
 	cfg := &config.Config{HTTPPort: port}
 	suite.strPort = fmt.Sprintf("%d", port)
@@ -59,6 +66,6 @@ func TestHTTPKomodoTestSuite(t *testing.T) {
 	suite.Run(t, new(HTTPKomodoTestSuite))
 }
 
-func (suite *HTTPCoinpaprikaTestSuite) TestTickersKomodoEcosystem() {
+func (suite *HTTPKomodoTestSuite) TestAllInformationsKomodoEcosystem() {
 	suite.finalizeTests("http://127.0.0.1:" + suite.strPort + "/api/v1/tickers")
 }

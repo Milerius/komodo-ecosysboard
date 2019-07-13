@@ -35,7 +35,17 @@ func TestLoadConfig(t *testing.T) {
 		wantErr bool
 	}{
 		{"Wrong path", args{"unexistent/path/"}, nil, true},
-		{"Good path", args{"samples/good_config.json"}, &Config{8080}, false},
+		{"Good path", args{"samples/good_config.json"}, &Config{HTTPPort: 8080, Coins: []struct {
+			Coin          string `json:"coin"`
+			CoinPaprikaID string `json:"coin_paprika_id"`
+		}{
+			{"kmd", "kmd-komodo"},
+			{"k64", "k64-komodore64"},
+			{"vrsc", "vrsc-verus-coin"},
+			{"rick", "test coin"},
+			{"revs", "revs"},
+			{"supernet", "unity-supernet"},
+		}}, false},
 		{"Not enough writes", args{"samples/not_good_rights_config.json"}, nil, true},
 		{"Not real json", args{"samples/not_real_json.json"}, nil, true},
 		{"Non Complete path", args{"config/config"}, nil, true},

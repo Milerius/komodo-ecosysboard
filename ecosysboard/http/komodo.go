@@ -19,6 +19,7 @@ package http
 import (
 	"encoding/json"
 	"github.com/kpango/glg"
+	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
 	"github.com/valyala/fasthttp"
 	"net/http"
 	"strings"
@@ -31,21 +32,12 @@ type CoinInfos struct {
 	BlockHeight   int                   `json:"block_height"`
 }
 
-var komodoCoinsToCoinpaprikaRegistry = map[string]string{
-	"kmd":      "kmd-komodo",
-	"vrsc":     "vrsc-verus-coin",
-	"k64":      "k64-komodore64",
-	"rick":     "test coin",
-	"revs":     "revs",
-	"supernet": "unity-supernet",
-}
-
-func TickersKomodoEcosystem(ctx *fasthttp.RequestCtx) {
-	tickers := make([]CoinpaprikaTickerData, 0, len(komodoCoinsToCoinpaprikaRegistry))
+func AllInformationsKomodoEcosystem(ctx *fasthttp.RequestCtx) {
+	tickers := make([]CoinpaprikaTickerData, 0, len(config.GConfig.Coins))
 	mutex := sync.RWMutex{}
 	var wg sync.WaitGroup
-	wg.Add(len(komodoCoinsToCoinpaprikaRegistry))
-	for key, value := range komodoCoinsToCoinpaprikaRegistry {
+	wg.Add(len(config.GConfig.Coins))
+	for _, value := range config.GConfig.Coins {
 		go func(key string, value string) {
 			defer wg.Done()
 			res := CTickerCoinpaprika(value)
@@ -55,7 +47,7 @@ func TickersKomodoEcosystem(ctx *fasthttp.RequestCtx) {
 			mutex.Lock()
 			tickers = append(tickers, *res)
 			mutex.Unlock()
-		}(key, value)
+		}(value.Coin, value.CoinPaprikaID)
 	}
 	wg.Wait()
 	if len(tickers) == 0 {

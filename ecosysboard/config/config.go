@@ -26,6 +26,10 @@ import (
 
 type Config struct {
 	HTTPPort int `json:"http_port"`
+	Coins    []struct {
+		Coin          string `json:"coin"`
+		CoinPaprikaID string `json:"coin_paprika_id"`
+	} `json:"coins"`
 }
 
 var GConfig *Config
