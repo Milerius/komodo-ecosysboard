@@ -30,16 +30,27 @@ func GetFirstOpenPort() int {
 	return int(port)
 }
 
-func InternalExecGet(finalEndpoint string, ctx *fasthttp.RequestCtx) {
+func InternalExecGet(finalEndpoint string, ctx *fasthttp.RequestCtx, shouldRelease bool) (*fasthttp.Request, *fasthttp.Response) {
 	client := fasthttp.Client{}
 	req := fasthttp.AcquireRequest()
 	req.Header.SetMethod("GET")
 	req.URI().Update(finalEndpoint)
 	res := fasthttp.AcquireResponse()
 	_ = client.Do(req, res)
-	ctx.SetStatusCode(res.StatusCode())
-	ctx.SetBodyString(string(res.Body()))
+	if ctx != nil {
+		ctx.SetStatusCode(res.StatusCode())
+		ctx.SetBodyString(string(res.Body()))
+	}
 	_ = glg.Debugf("http response: %s", string(res.Body()))
+	if shouldRelease {
+		ReleaseInternalExecGet(req, res)
+	} else {
+		return req, res
+	}
+	return nil, nil
+}
+
+func ReleaseInternalExecGet(req *fasthttp.Request, res *fasthttp.Response) {
 	fasthttp.ReleaseRequest(req)
 	fasthttp.ReleaseResponse(res)
 }
