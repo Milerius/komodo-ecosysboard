@@ -41,7 +41,8 @@ var komodoCoinsToCoinpaprikaRegistry = map[string]string{
 }
 
 func TickersKomodoEcosystem(ctx *fasthttp.RequestCtx) {
-	tickers := []CoinpaprikaTickerData{}
+	tickers := make([]CoinpaprikaTickerData, 0, len(komodoCoinsToCoinpaprikaRegistry))
+	mutex := sync.RWMutex{}
 	var wg sync.WaitGroup
 	wg.Add(len(komodoCoinsToCoinpaprikaRegistry))
 	for key, value := range komodoCoinsToCoinpaprikaRegistry {
@@ -51,7 +52,9 @@ func TickersKomodoEcosystem(ctx *fasthttp.RequestCtx) {
 			if value == "test coin" || res.Symbol == "" {
 				res.Symbol = strings.ToUpper(key)
 			}
+			mutex.Lock()
 			tickers = append(tickers, *res)
+			mutex.Unlock()
 		}(key, value)
 	}
 	wg.Wait()

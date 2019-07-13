@@ -38,7 +38,9 @@ func (suite *HTTPKomodoTestSuite) finalizeTests(url string) {
 	req.URI().Update(url)
 	res := fasthttp.AcquireResponse()
 	_ = client.Do(req, res)
-	suite.T().Logf("http response: %s", string(res.Body()))
+	if len(string(res.Body())) < 500 {
+		suite.T().Logf("http response: %s", string(res.Body()))
+	}
 	assert.EqualValuesf(suite.T(), 200, res.StatusCode(), "status code should be 200")
 	assert.NotEmptyf(suite.T(), res.Body(), "body should not be empty")
 	fasthttp.ReleaseRequest(req)

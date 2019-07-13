@@ -18,7 +18,6 @@ package http
 
 import (
 	"encoding/json"
-	"github.com/kpango/glg"
 	"github.com/valyala/fasthttp"
 	"time"
 )
@@ -59,7 +58,6 @@ func CTickersCoinpaprika() []CoinpaprikaTickerData {
 	req, res := InternalExecGet(finalEndpoint, nil, false)
 	if res.StatusCode() == 200 {
 		_ = json.Unmarshal(res.Body(), &tickers)
-		_ = glg.Debugf("tickers: %v", tickers)
 	}
 
 	ReleaseInternalExecGet(req, res)
@@ -67,12 +65,11 @@ func CTickersCoinpaprika() []CoinpaprikaTickerData {
 }
 
 func CTickerCoinpaprika(coinsId string) *CoinpaprikaTickerData {
-	ticker := &CoinpaprikaTickerData{}
+	ticker := new(CoinpaprikaTickerData)
 	finalEndpoint := CoinpaprikaEndpoint + "tickers/" + coinsId
 	req, res := InternalExecGet(finalEndpoint, nil, false)
 	if res.StatusCode() == 200 {
 		_ = json.Unmarshal(res.Body(), &ticker)
-		_ = glg.Debugf("ticker: %v", *ticker)
 	}
 	ReleaseInternalExecGet(req, res)
 	return ticker
