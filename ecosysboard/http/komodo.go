@@ -16,41 +16,48 @@
 
 package http
 
-// #cgo CFLAGS: -O2 -Wall
-// #include "magic_port.h"
-import "C"
-
 import (
+	"encoding/json"
 	"github.com/kpango/glg"
+	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
 	"github.com/valyala/fasthttp"
+	"net/http"
+	"strings"
+	"sync"
 )
 
-func GetFirstOpenPort() int {
-	port := C.get_first_open_port()
-	return int(port)
+type CoinInfos struct {
+	Ticker        CoinpaprikaTickerData `json:"ticker"`
+	BlockLastHash string                `json:"block_last_hash"`
+	BlockHeight   int                   `json:"block_height"`
 }
 
-func InternalExecGet(finalEndpoint string, ctx *fasthttp.RequestCtx, shouldRelease bool) (*fasthttp.Request, *fasthttp.Response) {
-	client := fasthttp.Client{}
-	req := fasthttp.AcquireRequest()
-	req.Header.SetMethod("GET")
-	req.URI().Update(finalEndpoint)
-	res := fasthttp.AcquireResponse()
-	_ = client.Do(req, res)
-	if ctx != nil {
-		ctx.SetStatusCode(res.StatusCode())
-		ctx.SetBodyString(string(res.Body()))
+func AllInformationsKomodoEcosystem(ctx *fasthttp.RequestCtx) {
+	coinInfos := make([]CoinInfos, 0, len(config.GConfig.Coins))
+	mutex := sync.RWMutex{}
+	var wg sync.WaitGroup
+	wg.Add(len(config.GConfig.Coins))
+	for _, value := range config.GConfig.Coins {
+		go func(key string, value string) {
+			currentCoin := CoinInfos{}
+			defer wg.Done()
+			res := CTickerCoinpaprika(value)
+			if value == "test coin" || res.Symbol == "" {
+				res.Symbol = strings.ToUpper(key)
+			}
+			currentCoin.Ticker = *res
+			mutex.Lock()
+			coinInfos = append(coinInfos, currentCoin)
+			mutex.Unlock()
+		}(value.Coin, value.CoinPaprikaID)
 	}
-	_ = glg.Debugf("http response: %s", string(res.Body()))
-	if shouldRelease {
-		ReleaseInternalExecGet(req, res)
-	} else {
-		return req, res
+	wg.Wait()
+	if len(coinInfos) == 0 {
+		ctx.SetStatusCode(http.StatusBadRequest)
+		return
 	}
-	return nil, nil
-}
-
-func ReleaseInternalExecGet(req *fasthttp.Request, res *fasthttp.Response) {
-	fasthttp.ReleaseRequest(req)
-	fasthttp.ReleaseResponse(res)
+	_ = glg.Debug("coinInfos komodo: %v", coinInfos)
+	ctx.SetStatusCode(200)
+	jsonTicker, _ := json.Marshal(coinInfos)
+	ctx.SetBodyString(string(jsonTicker))
 }

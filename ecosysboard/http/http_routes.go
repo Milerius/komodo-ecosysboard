@@ -47,5 +47,7 @@ func InitRooter() *router.Router {
 
 	//! Coinpaprika
 	r.GET("/api/v1/coinpaprika/tickers", TickersCoinpaprika)
+
+	r.GET("/api/v1/tickers", AllInformationsKomodoEcosystem)
 	return r
 }

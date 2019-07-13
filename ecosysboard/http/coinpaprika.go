@@ -17,6 +17,7 @@
 package http
 
 import (
+	"encoding/json"
 	"github.com/valyala/fasthttp"
 	"time"
 )
@@ -44,14 +45,37 @@ type CoinpaprikaTickerData struct {
 			PercentChange7D     float64   `json:"percent_change_7d"`
 			PercentChange30D    float64   `json:"percent_change_30d"`
 			PercentChange1Y     float64   `json:"percent_change_1y"`
-			AthPrice            int       `json:"ath_price"`
+			AthPrice            float64   `json:"ath_price"`
 			AthDate             time.Time `json:"ath_date"`
 			PercentFromPriceAth float64   `json:"percent_from_price_ath"`
 		} `json:"USD"`
 	} `json:"quotes"`
 }
 
+func CTickersCoinpaprika() []CoinpaprikaTickerData {
+	var tickers []CoinpaprikaTickerData
+	finalEndpoint := CoinpaprikaEndpoint + "tickers"
+	req, res := InternalExecGet(finalEndpoint, nil, false)
+	if res.StatusCode() == 200 {
+		_ = json.Unmarshal(res.Body(), &tickers)
+	}
+
+	ReleaseInternalExecGet(req, res)
+	return tickers
+}
+
+func CTickerCoinpaprika(coinsId string) *CoinpaprikaTickerData {
+	ticker := new(CoinpaprikaTickerData)
+	finalEndpoint := CoinpaprikaEndpoint + "tickers/" + coinsId
+	req, res := InternalExecGet(finalEndpoint, nil, false)
+	if res.StatusCode() == 200 {
+		_ = json.Unmarshal(res.Body(), &ticker)
+	}
+	ReleaseInternalExecGet(req, res)
+	return ticker
+}
+
 func TickersCoinpaprika(ctx *fasthttp.RequestCtx) {
 	finalEndpoint := CoinpaprikaEndpoint + "tickers"
-	InternalExecGet(finalEndpoint, ctx)
+	InternalExecGet(finalEndpoint, ctx, true)
 }

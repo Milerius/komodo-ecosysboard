@@ -22,5 +22,5 @@ import (
 
 func PingCoingecko(ctx *fasthttp.RequestCtx) {
 	finalEndpoint := CoingGeckoEndpoint + "/ping"
-	InternalExecGet(finalEndpoint, ctx)
+	InternalExecGet(finalEndpoint, ctx, true)
 }

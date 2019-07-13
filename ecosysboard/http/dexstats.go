@@ -42,68 +42,68 @@ func GetTransactionDetailsDexstats(ctx *fasthttp.RequestCtx) {
 	coinName := ctx.UserValue("coin")
 	txId := ctx.UserValue("txid")
 	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/tx/" + txId.(string)
-	InternalExecGet(fullEndpoint, ctx)
+	InternalExecGet(fullEndpoint, ctx, true)
 }
 
 func UTXODetailsDexstats(ctx *fasthttp.RequestCtx) {
 	coinName := ctx.UserValue("coin")
 	address := ctx.UserValue("address")
 	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/addrs/" + address.(string) + "/utxo"
-	InternalExecGet(fullEndpoint, ctx)
+	InternalExecGet(fullEndpoint, ctx, true)
 }
 
 func AddressDetailsDexstats(ctx *fasthttp.RequestCtx) {
 	coinName := ctx.UserValue("coin")
 	addrValue := ctx.UserValue("addrstr")
 	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/addr/" + addrValue.(string)
-	InternalExecGet(fullEndpoint, ctx)
+	InternalExecGet(fullEndpoint, ctx, true)
 }
 
 func TransactionByBlockDexstats(ctx *fasthttp.RequestCtx) {
 	coinName := ctx.UserValue("coin")
 	hashName := ctx.UserValue("hash")
 	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/txs?block=" + hashName.(string)
-	InternalExecGet(fullEndpoint, ctx)
+	InternalExecGet(fullEndpoint, ctx, true)
 }
 
 func TransactionByAddressDexstats(ctx *fasthttp.RequestCtx) {
 	coinName := ctx.UserValue("coin")
 	addressName := ctx.UserValue("address")
 	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/txs?address=" + addressName.(string)
-	InternalExecGet(fullEndpoint, ctx)
+	InternalExecGet(fullEndpoint, ctx, true)
 }
 
 func BlockHashFromHeightDexstats(ctx *fasthttp.RequestCtx) {
 	coinName := ctx.UserValue("coin")
 	blockHeight := ctx.UserValue("blockheight")
 	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/block-index/" + blockHeight.(string)
-	InternalExecGet(fullEndpoint, ctx)
+	InternalExecGet(fullEndpoint, ctx, true)
 }
 
 func DiagnosticInfoFromNodeDexstats(ctx *fasthttp.RequestCtx) {
 	coinName := ctx.UserValue("coin")
 	query := ctx.UserValue("query")
-	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/status?:q=" + query.(string)
-	InternalExecGet(fullEndpoint, ctx)
+	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/status?q=" + query.(string)
+	InternalExecGet(fullEndpoint, ctx, true)
 }
 
 func NodeSyncStatusDexstats(ctx *fasthttp.RequestCtx) {
 	coinName := ctx.UserValue("coin")
 	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/sync"
-	InternalExecGet(fullEndpoint, ctx)
+	InternalExecGet(fullEndpoint, ctx, true)
 }
 
 func NodePeerStatusDexstats(ctx *fasthttp.RequestCtx) {
 	coinName := ctx.UserValue("coin")
 	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/peer"
-	InternalExecGet(fullEndpoint, ctx)
+	InternalExecGet(fullEndpoint, ctx, true)
 }
 
 func BlockDetailsDexstats(ctx *fasthttp.RequestCtx) {
 	coinName := ctx.UserValue("coin")
 	hashName := ctx.UserValue("hash")
 	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/block/" + hashName.(string)
-	InternalExecGet(fullEndpoint, ctx)
+	InternalExecGet(fullEndpoint, ctx, true)
 }
 
 func searchAsABlockHeight(endpoint string, searchInput SearchRequestDexstatsJson, ctx *fasthttp.RequestCtx, answerSearch *SearchAnswerDexstatsJson, coinName interface{}) bool {

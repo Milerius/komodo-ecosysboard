@@ -126,7 +126,9 @@ func (suite *HTTPDexstatsTestSuite) TestSearchOnDexstats() {
 		req.SetBodyString(tt.args.Input)
 		res := fasthttp.AcquireResponse()
 		_ = client.Do(req, res)
-		suite.T().Logf("resp: %s", string(res.Body()))
+		if len(string(res.Body())) < 500 {
+			suite.T().Logf("resp: %s", string(res.Body()))
+		}
 		assert.EqualValues(suite.T(), tt.expected_status, res.StatusCode())
 		if len(tt.body_contains) > 0 {
 			assert.Containsf(suite.T(), string(res.Body()), tt.body_contains, "should contains: %s", tt.body_contains)

@@ -16,41 +16,56 @@
 
 package http
 
-// #cgo CFLAGS: -O2 -Wall
-// #include "magic_port.h"
-import "C"
-
 import (
-	"github.com/kpango/glg"
+	"fmt"
+	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/suite"
 	"github.com/valyala/fasthttp"
+	"os"
+	"path/filepath"
+	"testing"
+	"time"
 )
 
-func GetFirstOpenPort() int {
-	port := C.get_first_open_port()
-	return int(port)
+type HTTPKomodoTestSuite struct {
+	suite.Suite
+	strPort string
 }
 
-func InternalExecGet(finalEndpoint string, ctx *fasthttp.RequestCtx, shouldRelease bool) (*fasthttp.Request, *fasthttp.Response) {
+func (suite *HTTPKomodoTestSuite) finalizeTests(url string) {
 	client := fasthttp.Client{}
 	req := fasthttp.AcquireRequest()
 	req.Header.SetMethod("GET")
-	req.URI().Update(finalEndpoint)
+	req.URI().Update(url)
 	res := fasthttp.AcquireResponse()
 	_ = client.Do(req, res)
-	if ctx != nil {
-		ctx.SetStatusCode(res.StatusCode())
-		ctx.SetBodyString(string(res.Body()))
+	if len(string(res.Body())) < 500 {
+		suite.T().Logf("http response: %s", string(res.Body()))
 	}
-	_ = glg.Debugf("http response: %s", string(res.Body()))
-	if shouldRelease {
-		ReleaseInternalExecGet(req, res)
-	} else {
-		return req, res
-	}
-	return nil, nil
-}
-
-func ReleaseInternalExecGet(req *fasthttp.Request, res *fasthttp.Response) {
+	assert.EqualValuesf(suite.T(), 200, res.StatusCode(), "status code should be 200")
+	assert.NotEmptyf(suite.T(), res.Body(), "body should not be empty")
 	fasthttp.ReleaseRequest(req)
 	fasthttp.ReleaseResponse(res)
+}
+
+func (suite *HTTPKomodoTestSuite) SetupTest() {
+	dir, _ := os.Getwd()
+	parent := filepath.Dir(dir)
+	_, err := config.LoadConfig(parent + "/config/samples/good_config.json")
+	assert.Nil(suite.T(), err, "should be nil ")
+	suite.T().Logf("dir: %s", dir)
+	port := GetFirstOpenPort()
+	cfg := &config.Config{HTTPPort: port}
+	suite.strPort = fmt.Sprintf("%d", port)
+	go LaunchServer(cfg)
+	time.Sleep(10 * time.Millisecond)
+}
+
+func TestHTTPKomodoTestSuite(t *testing.T) {
+	suite.Run(t, new(HTTPKomodoTestSuite))
+}
+
+func (suite *HTTPKomodoTestSuite) TestAllInformationsKomodoEcosystem() {
+	suite.finalizeTests("http://127.0.0.1:" + suite.strPort + "/api/v1/tickers")
 }

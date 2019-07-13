@@ -18,12 +18,13 @@ package http
 
 import (
 	"fmt"
+	"testing"
+	"time"
+
 	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"github.com/valyala/fasthttp"
-	"testing"
-	"time"
 )
 
 func (suite *HTTPCoinpaprikaTestSuite) finalizeTests(url string) {
@@ -59,4 +60,27 @@ func (suite *HTTPCoinpaprikaTestSuite) TestTickersCoinpaprika() {
 
 func TestHTTPCoinpaprikaTestSuite(t *testing.T) {
 	suite.Run(t, new(HTTPCoinpaprikaTestSuite))
+}
+
+func TestCTickersCoinpaprika(t *testing.T) {
+	assert.NotNil(t, CTickersCoinpaprika(), "should not be nil")
+}
+
+func TestCTickerCoinpaprika(t *testing.T) {
+	type args struct {
+		coinsId string
+	}
+	tests := []struct {
+		name         string
+		args         args
+		wantedSymbol string
+	}{
+		{"valid coin", args{"kmd-komodo"}, "KMD"},
+		{"an other valid coin", args{"k64-komodore64"}, "K64"},
+		{"non valid coin", args{"rck-rick"}, ""},
+	}
+	for _, tt := range tests {
+		res := CTickerCoinpaprika(tt.args.coinsId)
+		assert.EqualValues(t, tt.wantedSymbol, res.Symbol)
+	}
 }
