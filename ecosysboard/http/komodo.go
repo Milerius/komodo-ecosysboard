@@ -25,6 +25,12 @@ import (
 	"sync"
 )
 
+type CoinInfos struct {
+	Ticker        CoinpaprikaTickerData `json:"ticker"`
+	BlockLastHash string                `json:"block_last_hash"`
+	BlockHeight   int                   `json:"block_height"`
+}
+
 var komodoCoinsToCoinpaprikaRegistry = map[string]string{
 	"kmd":      "kmd-komodo",
 	"vrsc":     "vrsc-verus-coin",
