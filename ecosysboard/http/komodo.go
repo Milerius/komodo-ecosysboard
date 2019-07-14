@@ -29,7 +29,7 @@ import (
 type CoinInfos struct {
 	Ticker        CoinpaprikaTickerData `json:"ticker"`
 	BlockLastHash string                `json:"block_last_hash"`
-	BlockHeight   int                   `json:"block_height"`
+	BlockInfo     StatusInfo            `json:"status"`
 }
 
 func AllInformationsKomodoEcosystem(ctx *fasthttp.RequestCtx) {
@@ -50,7 +50,7 @@ func AllInformationsKomodoEcosystem(ctx *fasthttp.RequestCtx) {
 
 			//! Last block hash
 			currentCoin.BlockLastHash = CDiagnosticInfoFromNodeDexstats("getLastBlockHash", key).LastBlockHash.Lastblockhash
-			currentCoin.BlockHeight = CDiagnosticInfoFromNodeDexstats("getInfo", key).Infos.Info.Blocks
+			currentCoin.BlockInfo = CDiagnosticInfoFromNodeDexstats("getInfo", key).Infos
 			currentCoin.Ticker = *res
 			mutex.Lock()
 			coinInfos = append(coinInfos, currentCoin)
