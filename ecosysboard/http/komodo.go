@@ -56,7 +56,7 @@ func AllInformationsKomodoEcosystem(ctx *fasthttp.RequestCtx) {
 			currentCoin.BlockLastHash = CDiagnosticInfoFromNodeDexstats("getLastBlockHash", key).LastBlockHash.Lastblockhash
 			currentCoin.BlockInfo = CDiagnosticInfoFromNodeDexstats("getInfo", key).Infos
 			node := CNodeSyncStatusDexstats(key)
-			currentCoin.NodeIsSynced = node.Status == "finished" && node.SyncPercentage == 100
+			currentCoin.NodeIsSynced = node.Status == "finished" && node.BlockChainHeight == currentCoin.BlockInfo.Info.Blocks
 			currentCoin.NodeIsOnline = currentCoin.BlockInfo.Info.Connections > 2
 			if currentCoin.NodeIsSynced && currentCoin.NodeIsOnline {
 				currentCoin.NotarizedHash = CBlockHashFromHeightDexstats(key, fmt.Sprintf("%d", currentCoin.BlockInfo.Info.Notarized)).BlockHash
