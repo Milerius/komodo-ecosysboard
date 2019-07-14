@@ -28,12 +28,13 @@ import (
 )
 
 type CoinInfos struct {
-	Ticker        CoinpaprikaTickerData `json:"ticker"`
-	BlockLastHash string                `json:"block_last_hash"`
-	BlockInfo     StatusInfo            `json:"status"`
-	NodeIsOnline  bool                  `json:"node_is_online"`
-	NodeIsSynced  bool                  `json:"node_is_synced"`
-	NotarizedHash string                `json:"notarizedhash"`
+	Ticker                CoinpaprikaTickerData `json:"ticker"`
+	BlockLastHash         string                `json:"block_last_hash"`
+	BlockInfo             StatusInfo            `json:"status"`
+	NodeIsOnline          bool                  `json:"node_is_online"`
+	NodeIsSynced          bool                  `json:"node_is_synced"`
+	NotarizedHash         string                `json:"notarizedhash"`
+	NotarizedTransactions []string              `json:"notarizedtxid"`
 }
 
 func AllInformationsKomodoEcosystem(ctx *fasthttp.RequestCtx) {
@@ -60,6 +61,7 @@ func AllInformationsKomodoEcosystem(ctx *fasthttp.RequestCtx) {
 			currentCoin.NodeIsOnline = currentCoin.BlockInfo.Info.Connections > 2
 			if currentCoin.NodeIsSynced && currentCoin.NodeIsOnline {
 				currentCoin.NotarizedHash = CBlockHashFromHeightDexstats(key, fmt.Sprintf("%d", currentCoin.BlockInfo.Info.Notarized)).BlockHash
+				currentCoin.NotarizedTransactions = CBlockDetailsDexstats(key, currentCoin.NotarizedHash).Tx
 			}
 			currentCoin.Ticker = *res
 			mutex.Lock()

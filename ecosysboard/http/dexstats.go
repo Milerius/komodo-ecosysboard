@@ -26,6 +26,30 @@ import (
 	"net/http"
 )
 
+type BlockDetails struct {
+	Hash              string   `json:"hash"`
+	Size              int      `json:"size"`
+	Height            int      `json:"height"`
+	Version           int      `json:"version"`
+	Merkleroot        string   `json:"merkleroot"`
+	Tx                []string `json:"tx"`
+	Time              int      `json:"time"`
+	Nonce             string   `json:"nonce"`
+	Solution          string   `json:"solution"`
+	Bits              string   `json:"bits"`
+	Difficulty        float64  `json:"difficulty"`
+	Chainwork         string   `json:"chainwork"`
+	Confirmations     int      `json:"confirmations"`
+	Previousblockhash string   `json:"previousblockhash"`
+	Nextblockhash     string   `json:"nextblockhash"`
+	Reward            int      `json:"reward"`
+	IsMainChain       bool     `json:"isMainChain"`
+	PoolInfo          struct {
+		PoolName string `json:"poolName"`
+		URL      string `json:"url"`
+	} `json:"poolInfo"`
+}
+
 type StatusLastBlockHash struct {
 	SyncTipHash   string `json:"syncTipHash"`
 	Lastblockhash string `json:"lastblockhash"`
@@ -187,6 +211,15 @@ func NodePeerStatusDexstats(ctx *fasthttp.RequestCtx) {
 	coinName := ctx.UserValue("coin")
 	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/peer"
 	InternalExecGet(fullEndpoint, ctx, true)
+}
+
+func CBlockDetailsDexstats(coinName string, blockHash string) BlockDetails {
+	blockDetails := BlockDetails{}
+	fullEndpoint := "http://" + coinName + DexStatsExplorerEndpoint + "/block/" + blockHash
+	req, res := InternalExecGet(fullEndpoint, nil, false)
+	_ = json.Unmarshal(res.Body(), &blockDetails)
+	ReleaseInternalExecGet(req, res)
+	return blockDetails
 }
 
 func BlockDetailsDexstats(ctx *fasthttp.RequestCtx) {

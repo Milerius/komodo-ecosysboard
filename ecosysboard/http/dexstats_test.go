@@ -179,3 +179,8 @@ func (suite *HTTPDexstatsTestSuite) TestCBlockHashFromHeightDexstats() {
 	res := CBlockHashFromHeightDexstats("kmd", "1442250")
 	assert.False(suite.T(), cmp.Equal(res, BlockHashFromBlockHeightJson{}), "should not be true")
 }
+
+func (suite *HTTPDexstatsTestSuite) TestCBlockDetailsDexstats() {
+	res := CBlockDetailsDexstats("kmd", "06aacc7710c32a86530036f9d912d41278bd9a9bf88e32339b537e67f82784cf")
+	assert.False(suite.T(), cmp.Equal(res, BlockDetails{}), "should not be true")
+}
