@@ -26,6 +26,43 @@ import (
 	"net/http"
 )
 
+type StatusLastBlockHash struct {
+	SyncTipHash   string `json:"syncTipHash"`
+	Lastblockhash string `json:"lastblockhash"`
+}
+
+type StatusBestBlockHash struct {
+	Bestblockhash string `json:"bestblockhash"`
+}
+
+type StatusDifficulty struct {
+	Difficulty float64 `json:"difficulty"`
+}
+
+type StatusInfo struct {
+	Info struct {
+		Version         int     `json:"version"`
+		Protocolversion int     `json:"protocolversion"`
+		Blocks          int     `json:"blocks"`
+		Timeoffset      int     `json:"timeoffset"`
+		Connections     int     `json:"connections"`
+		Proxy           string  `json:"proxy"`
+		Difficulty      float64 `json:"difficulty"`
+		Testnet         bool    `json:"testnet"`
+		Relayfee        float64 `json:"relayfee"`
+		Errors          string  `json:"errors"`
+		Notarized       int     `json:"notarized"`
+		Network         string  `json:"network"`
+	} `json:"info"`
+}
+
+type StatusGlobal struct {
+	BestBlockHash StatusBestBlockHash
+	Difficulty    StatusDifficulty
+	LastBlockHash StatusLastBlockHash
+	Infos         StatusInfo
+}
+
 type SearchRequestDexstatsJson struct {
 	Input string `json:"input"`
 }
@@ -83,8 +120,34 @@ func BlockHashFromHeightDexstats(ctx *fasthttp.RequestCtx) {
 func DiagnosticInfoFromNodeDexstats(ctx *fasthttp.RequestCtx) {
 	coinName := ctx.UserValue("coin")
 	query := ctx.UserValue("query")
-	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "/status?q=" + query.(string)
+	fullEndpoint := "http://" + coinName.(string) + DexStatsExplorerEndpoint + "status?q=" + query.(string)
 	InternalExecGet(fullEndpoint, ctx, true)
+}
+
+func CDiagnosticInfoFromNodeDexstats(statusType string, coinName string) StatusGlobal {
+	status := StatusGlobal{}
+	fullEndpoint := "http://" + coinName + DexStatsExplorerEndpoint + "status?q=" + statusType
+	req, res := InternalExecGet(fullEndpoint, nil, false)
+	switch statusType {
+	case "getInfo":
+		statusInfo := StatusInfo{}
+		_ = json.Unmarshal(res.Body(), &statusInfo)
+		status.Infos = statusInfo
+		break
+	case "getLastBlockHash":
+		statusLastBlockHash := StatusLastBlockHash{}
+		_ = json.Unmarshal(res.Body(), &statusLastBlockHash)
+		status.LastBlockHash = statusLastBlockHash
+		break
+	case "getBestBlockHash":
+		statusBestBlockHash := StatusBestBlockHash{}
+		_ = json.Unmarshal(res.Body(), &statusBestBlockHash)
+		status.BestBlockHash = statusBestBlockHash
+		break
+	default:
+	}
+	ReleaseInternalExecGet(req, res)
+	return status
 }
 
 func NodeSyncStatusDexstats(ctx *fasthttp.RequestCtx) {

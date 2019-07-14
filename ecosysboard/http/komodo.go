@@ -41,10 +41,16 @@ func AllInformationsKomodoEcosystem(ctx *fasthttp.RequestCtx) {
 		go func(key string, value string) {
 			currentCoin := CoinInfos{}
 			defer wg.Done()
+
+			//! Ticker
 			res := CTickerCoinpaprika(value)
 			if value == "test coin" || res.Symbol == "" {
 				res.Symbol = strings.ToUpper(key)
 			}
+
+			//! Last block hash
+			currentCoin.BlockLastHash = CDiagnosticInfoFromNodeDexstats("getLastBlockHash", key).LastBlockHash.Lastblockhash
+			currentCoin.BlockHeight = CDiagnosticInfoFromNodeDexstats("getInfo", key).Infos.Info.Blocks
 			currentCoin.Ticker = *res
 			mutex.Lock()
 			coinInfos = append(coinInfos, currentCoin)
