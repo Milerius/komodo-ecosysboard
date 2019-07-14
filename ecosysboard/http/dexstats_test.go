@@ -23,6 +23,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/go-cmp/cmp"
 	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -91,6 +92,8 @@ func (suite *HTTPDexstatsTestSuite) TestDiagnosticInfoFromNodeDexstats() {
 	suite.finalizeTest(err, statusCode, body)
 	statusCode, body, err = fasthttp.Get(nil, "http://127.0.0.1:"+suite.strPort+"/api/v1/dexstats/kmd/status/getLastBlockHash")
 	suite.finalizeTest(err, statusCode, body)
+	statusCode, body, err = fasthttp.Get(nil, "http://127.0.0.1:"+suite.strPort+"/api/v1/dexstats/k64/status/getInfo")
+	suite.finalizeTest(err, statusCode, body)
 }
 
 func (suite *HTTPDexstatsTestSuite) TestSearchOnDexstats() {
@@ -154,4 +157,25 @@ func (suite *HTTPDexstatsTestSuite) finalizeTest(err error, statusCode int, body
 
 func TestHTTPDexstatsTestSuite(t *testing.T) {
 	suite.Run(t, new(HTTPDexstatsTestSuite))
+}
+
+func (suite *HTTPDexstatsTestSuite) TestCDiagnosticInfoFromNodeDexstats() {
+	res := CDiagnosticInfoFromNodeDexstats("getInfo", "kmd")
+	assert.False(suite.T(), cmp.Equal(res.Infos, StatusInfo{}), "should not be true")
+	res = CDiagnosticInfoFromNodeDexstats("getLastBlockHash", "kmd")
+	assert.False(suite.T(), cmp.Equal(res.LastBlockHash, StatusLastBlockHash{}), "should not be true")
+	res = CDiagnosticInfoFromNodeDexstats("getBestBlockHash", "kmd")
+	assert.False(suite.T(), cmp.Equal(res.BestBlockHash, StatusBestBlockHash{}), "should not be true")
+	res = CDiagnosticInfoFromNodeDexstats("bad status", "kmd")
+	assert.True(suite.T(), cmp.Equal(res, StatusGlobal{}), "should be true")
+}
+
+func (suite *HTTPDexstatsTestSuite) TestCNodeSyncStatusDexstats() {
+	res := CNodeSyncStatusDexstats("kmd")
+	assert.False(suite.T(), cmp.Equal(res, NodeSync{}), "should not be true")
+}
+
+func (suite *HTTPDexstatsTestSuite) TestCBlockHashFromHeightDexstats() {
+	res := CBlockHashFromHeightDexstats("kmd", "1442250")
+	assert.False(suite.T(), cmp.Equal(res, BlockHashFromBlockHeightJson{}), "should not be true")
 }
