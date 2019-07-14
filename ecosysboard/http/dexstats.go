@@ -42,7 +42,7 @@ type BlockDetails struct {
 	Confirmations     int      `json:"confirmations"`
 	Previousblockhash string   `json:"previousblockhash"`
 	Nextblockhash     string   `json:"nextblockhash"`
-	Reward            int      `json:"reward"`
+	Reward            float64  `json:"reward"`
 	IsMainChain       bool     `json:"isMainChain"`
 	PoolInfo          struct {
 		PoolName string `json:"poolName"`
