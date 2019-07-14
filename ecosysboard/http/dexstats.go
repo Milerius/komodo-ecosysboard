@@ -56,6 +56,15 @@ type StatusInfo struct {
 	} `json:"info"`
 }
 
+type NodeSync struct {
+	Status           string      `json:"status"`
+	BlockChainHeight int         `json:"blockChainHeight"`
+	SyncPercentage   int         `json:"syncPercentage"`
+	Height           int         `json:"height"`
+	Error            interface{} `json:"error"`
+	Type             string      `json:"type"`
+}
+
 type StatusGlobal struct {
 	BestBlockHash StatusBestBlockHash
 	Difficulty    StatusDifficulty
@@ -110,6 +119,15 @@ func TransactionByAddressDexstats(ctx *fasthttp.RequestCtx) {
 	InternalExecGet(fullEndpoint, ctx, true)
 }
 
+func CBlockHashFromHeightDexstats(coinName string, blockHeight string) BlockHashFromBlockHeightJson {
+	blockHash := BlockHashFromBlockHeightJson{}
+	fullEndpoint := "http://" + coinName + DexStatsExplorerEndpoint + "/block-index/" + blockHeight
+	req, res := InternalExecGet(fullEndpoint, nil, false)
+	_ = json.Unmarshal(res.Body(), &blockHash)
+	ReleaseInternalExecGet(req, res)
+	return blockHash
+}
+
 func BlockHashFromHeightDexstats(ctx *fasthttp.RequestCtx) {
 	coinName := ctx.UserValue("coin")
 	blockHeight := ctx.UserValue("blockheight")
@@ -148,6 +166,15 @@ func CDiagnosticInfoFromNodeDexstats(statusType string, coinName string) StatusG
 	}
 	ReleaseInternalExecGet(req, res)
 	return status
+}
+
+func CNodeSyncStatusDexstats(coinName string) NodeSync {
+	nodeRes := NodeSync{}
+	fullEndpoint := "http://" + coinName + DexStatsExplorerEndpoint + "/sync"
+	req, res := InternalExecGet(fullEndpoint, nil, false)
+	_ = json.Unmarshal(res.Body(), &nodeRes)
+	ReleaseInternalExecGet(req, res)
+	return nodeRes
 }
 
 func NodeSyncStatusDexstats(ctx *fasthttp.RequestCtx) {

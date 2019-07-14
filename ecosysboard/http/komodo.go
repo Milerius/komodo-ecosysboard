@@ -18,6 +18,7 @@ package http
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/kpango/glg"
 	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
 	"github.com/valyala/fasthttp"
@@ -30,6 +31,9 @@ type CoinInfos struct {
 	Ticker        CoinpaprikaTickerData `json:"ticker"`
 	BlockLastHash string                `json:"block_last_hash"`
 	BlockInfo     StatusInfo            `json:"status"`
+	NodeIsOnline  bool                  `json:"node_is_online"`
+	NodeIsSynced  bool                  `json:"node_is_synced"`
+	NotarizedHash string                `json:"notarizedhash"`
 }
 
 func AllInformationsKomodoEcosystem(ctx *fasthttp.RequestCtx) {
@@ -51,6 +55,12 @@ func AllInformationsKomodoEcosystem(ctx *fasthttp.RequestCtx) {
 			//! Last block hash
 			currentCoin.BlockLastHash = CDiagnosticInfoFromNodeDexstats("getLastBlockHash", key).LastBlockHash.Lastblockhash
 			currentCoin.BlockInfo = CDiagnosticInfoFromNodeDexstats("getInfo", key).Infos
+			node := CNodeSyncStatusDexstats(key)
+			currentCoin.NodeIsSynced = node.Status == "finished" && node.SyncPercentage == 100
+			currentCoin.NodeIsOnline = currentCoin.BlockInfo.Info.Connections > 2
+			if currentCoin.NodeIsSynced && currentCoin.NodeIsOnline {
+				currentCoin.NotarizedHash = CBlockHashFromHeightDexstats(key, fmt.Sprintf("%d", currentCoin.BlockInfo.Info.Notarized)).BlockHash
+			}
 			currentCoin.Ticker = *res
 			mutex.Lock()
 			coinInfos = append(coinInfos, currentCoin)

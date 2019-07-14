@@ -18,12 +18,12 @@ package http
 
 import (
 	"fmt"
-	"github.com/google/go-cmp/cmp"
 	"net/http"
 	"strconv"
 	"testing"
 	"time"
 
+	"github.com/google/go-cmp/cmp"
 	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -168,4 +168,14 @@ func (suite *HTTPDexstatsTestSuite) TestCDiagnosticInfoFromNodeDexstats() {
 	assert.False(suite.T(), cmp.Equal(res.BestBlockHash, StatusBestBlockHash{}), "should not be true")
 	res = CDiagnosticInfoFromNodeDexstats("bad status", "kmd")
 	assert.True(suite.T(), cmp.Equal(res, StatusGlobal{}), "should be true")
+}
+
+func (suite *HTTPDexstatsTestSuite) TestCNodeSyncStatusDexstats() {
+	res := CNodeSyncStatusDexstats("kmd")
+	assert.False(suite.T(), cmp.Equal(res, NodeSync{}), "should not be true")
+}
+
+func (suite *HTTPDexstatsTestSuite) TestCBlockHashFromHeightDexstats() {
+	res := CBlockHashFromHeightDexstats("kmd", "1442250")
+	assert.False(suite.T(), cmp.Equal(res, BlockHashFromBlockHeightJson{}), "should not be true")
 }
