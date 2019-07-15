@@ -62,9 +62,6 @@ func getInfoAboutSpecificCoin(key string, value string) CoinInfos {
 
 func GetInformationForSpecificCoinKomodoEcosystem(ctx *fasthttp.RequestCtx) {
 	coinName := ctx.UserValue("coin")
-	sort.SliceStable(config.GConfig.Coins, func(i, j int) bool {
-		return config.GConfig.Coins[i].Coin < config.GConfig.Coins[j].Coin
-	})
 	idx := sort.Search(len(config.GConfig.Coins), func(i int) bool { return config.GConfig.Coins[i].Coin >= coinName.(string) })
 	_ = glg.Infof("find needle: %v", config.GConfig.Coins[idx])
 	coinInfo := getInfoAboutSpecificCoin(config.GConfig.Coins[idx].Coin, config.GConfig.Coins[idx].CoinPaprikaID)

@@ -22,6 +22,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"io/ioutil"
 	"os"
+	"sort"
 )
 
 type Config struct {
@@ -53,6 +54,9 @@ func LoadConfig(ConfigPath string) (*Config, error) {
 	if cmp.Equal(Config{}, *cfg) {
 		return nil, errors.New("configuration seem's to be wrong, or not well-formed")
 	}
+	sort.SliceStable(cfg.Coins, func(i, j int) bool {
+		return cfg.Coins[i].Coin < cfg.Coins[j].Coin
+	})
 	GConfig = cfg
 	return cfg, nil
 }
