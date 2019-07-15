@@ -69,3 +69,7 @@ func TestHTTPKomodoTestSuite(t *testing.T) {
 func (suite *HTTPKomodoTestSuite) TestAllInformationsKomodoEcosystem() {
 	suite.finalizeTests("http://127.0.0.1:" + suite.strPort + "/api/v1/tickers")
 }
+
+func (suite *HTTPKomodoTestSuite) TestGetInformationForSpecificCoinKomodoEcosystem() {
+	suite.finalizeTests("http://127.0.0.1:" + suite.strPort + "/api/v1/tickers/kmd")
+}

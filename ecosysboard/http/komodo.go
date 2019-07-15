@@ -19,10 +19,12 @@ package http
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/google/go-cmp/cmp"
 	"github.com/kpango/glg"
 	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
 	"github.com/valyala/fasthttp"
 	"net/http"
+	"sort"
 	"strings"
 	"sync"
 )
@@ -37,6 +39,41 @@ type CoinInfos struct {
 	NotarizedTransactions []string              `json:"notarizedtxid"`
 }
 
+func getInfoAboutSpecificCoin(key string, value string) CoinInfos {
+	currentCoin := CoinInfos{}
+	//! Ticker
+	res := CTickerCoinpaprika(value)
+	if value == "test coin" || res.Symbol == "" {
+		res.Symbol = strings.ToUpper(key)
+	}
+	//! Last block hash
+	currentCoin.BlockLastHash = CDiagnosticInfoFromNodeDexstats("getLastBlockHash", key).LastBlockHash.Lastblockhash
+	currentCoin.BlockInfo = CDiagnosticInfoFromNodeDexstats("getInfo", key).Infos
+	node := CNodeSyncStatusDexstats(key)
+	currentCoin.NodeIsSynced = node.Status == "finished" && node.BlockChainHeight == currentCoin.BlockInfo.Info.Blocks
+	currentCoin.NodeIsOnline = currentCoin.BlockInfo.Info.Connections > 2
+	if currentCoin.NodeIsSynced && currentCoin.NodeIsOnline {
+		currentCoin.NotarizedHash = CBlockHashFromHeightDexstats(key, fmt.Sprintf("%d", currentCoin.BlockInfo.Info.Notarized)).BlockHash
+		currentCoin.NotarizedTransactions = CBlockDetailsDexstats(key, currentCoin.NotarizedHash).Tx
+	}
+	currentCoin.Ticker = *res
+	return currentCoin
+}
+
+func GetInformationForSpecificCoinKomodoEcosystem(ctx *fasthttp.RequestCtx) {
+	coinName := ctx.UserValue("coin")
+	idx := sort.Search(len(config.GConfig.Coins), func(i int) bool { return config.GConfig.Coins[i].Coin >= coinName.(string) })
+	_ = glg.Infof("find needle: %v", config.GConfig.Coins[idx])
+	coinInfo := getInfoAboutSpecificCoin(config.GConfig.Coins[idx].Coin, config.GConfig.Coins[idx].CoinPaprikaID)
+	if cmp.Equal(CoinInfos{}, coinInfo) {
+		ctx.SetStatusCode(http.StatusInternalServerError)
+		return
+	}
+	ctx.SetStatusCode(200)
+	coinInfoJson, _ := json.Marshal(coinInfo)
+	ctx.SetBodyString(string(coinInfoJson))
+}
+
 func AllInformationsKomodoEcosystem(ctx *fasthttp.RequestCtx) {
 	coinInfos := make([]CoinInfos, 0, len(config.GConfig.Coins))
 	mutex := sync.RWMutex{}
@@ -44,26 +81,8 @@ func AllInformationsKomodoEcosystem(ctx *fasthttp.RequestCtx) {
 	wg.Add(len(config.GConfig.Coins))
 	for _, value := range config.GConfig.Coins {
 		go func(key string, value string) {
-			currentCoin := CoinInfos{}
 			defer wg.Done()
-
-			//! Ticker
-			res := CTickerCoinpaprika(value)
-			if value == "test coin" || res.Symbol == "" {
-				res.Symbol = strings.ToUpper(key)
-			}
-
-			//! Last block hash
-			currentCoin.BlockLastHash = CDiagnosticInfoFromNodeDexstats("getLastBlockHash", key).LastBlockHash.Lastblockhash
-			currentCoin.BlockInfo = CDiagnosticInfoFromNodeDexstats("getInfo", key).Infos
-			node := CNodeSyncStatusDexstats(key)
-			currentCoin.NodeIsSynced = node.Status == "finished" && node.BlockChainHeight == currentCoin.BlockInfo.Info.Blocks
-			currentCoin.NodeIsOnline = currentCoin.BlockInfo.Info.Connections > 2
-			if currentCoin.NodeIsSynced && currentCoin.NodeIsOnline {
-				currentCoin.NotarizedHash = CBlockHashFromHeightDexstats(key, fmt.Sprintf("%d", currentCoin.BlockInfo.Info.Notarized)).BlockHash
-				currentCoin.NotarizedTransactions = CBlockDetailsDexstats(key, currentCoin.NotarizedHash).Tx
-			}
-			currentCoin.Ticker = *res
+			currentCoin := getInfoAboutSpecificCoin(key, value)
 			mutex.Lock()
 			coinInfos = append(coinInfos, currentCoin)
 			mutex.Unlock()

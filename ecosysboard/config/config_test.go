@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"os"
+	"sort"
 	"testing"
 )
 
@@ -52,6 +53,11 @@ func TestLoadConfig(t *testing.T) {
 		{"Wrong Json file", args{"samples/wrong_json.json"}, nil, true},
 	}
 	for _, tt := range tests {
+		if tt.want != nil {
+			sort.SliceStable(tt.want.Coins, func(i, j int) bool {
+				return tt.want.Coins[i].Coin < tt.want.Coins[j].Coin
+			})
+		}
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := LoadConfig(tt.args.ConfigPath)
 			assert.Equalf(t, err != nil, tt.wantErr, "LoadConfig() error = %v, wantErr %v", err, tt.wantErr)
