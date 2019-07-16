@@ -157,6 +157,8 @@ Get all the information about all the coins from the **komodo ecosystem**: ticke
 ]
 ```
 
+Curl command: `curl http://127.0.0.1:8080/api/v1/tickers`
+
 ## get information about one specific coin
 
 Get all the information about a coin from the **komodo ecosystem**: ticker, last block, status, sync, notarized hash
