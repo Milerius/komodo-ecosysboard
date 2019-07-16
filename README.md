@@ -43,6 +43,10 @@ bash scripts/coverage.sh
 
 :construction:
 
+## Docs
+
+The documentation of the api rest is available [here](./docs/api.md)
+
 ## Authors
 
 -  **Roman Sztergbaum** - Creator - [Milerius](https://github.com/Milerius)
