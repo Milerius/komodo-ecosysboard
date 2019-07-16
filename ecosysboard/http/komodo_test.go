@@ -33,7 +33,7 @@ type HTTPKomodoTestSuite struct {
 	strPort string
 }
 
-func (suite *HTTPKomodoTestSuite) finalizeTests(url string) {
+func (suite *HTTPKomodoTestSuite) finalizeTests(url string, expectedStatus int) {
 	client := fasthttp.Client{}
 	req := fasthttp.AcquireRequest()
 	req.Header.SetMethod("GET")
@@ -43,7 +43,7 @@ func (suite *HTTPKomodoTestSuite) finalizeTests(url string) {
 	if len(string(res.Body())) < 500 {
 		suite.T().Logf("http response: %s", string(res.Body()))
 	}
-	assert.EqualValuesf(suite.T(), 200, res.StatusCode(), "status code should be 200")
+	assert.EqualValuesf(suite.T(), expectedStatus, res.StatusCode(), "status code should be 200")
 	assert.NotEmptyf(suite.T(), res.Body(), "body should not be empty")
 	fasthttp.ReleaseRequest(req)
 	fasthttp.ReleaseResponse(res)
@@ -67,9 +67,10 @@ func TestHTTPKomodoTestSuite(t *testing.T) {
 }
 
 func (suite *HTTPKomodoTestSuite) TestAllInformationsKomodoEcosystem() {
-	suite.finalizeTests("http://127.0.0.1:" + suite.strPort + "/api/v1/tickers")
+	suite.finalizeTests("http://127.0.0.1:"+suite.strPort+"/api/v1/tickers", 200)
 }
 
 func (suite *HTTPKomodoTestSuite) TestGetInformationForSpecificCoinKomodoEcosystem() {
-	suite.finalizeTests("http://127.0.0.1:" + suite.strPort + "/api/v1/tickers/kmd")
+	suite.finalizeTests("http://127.0.0.1:"+suite.strPort+"/api/v1/tickers/kmd", 200)
+	suite.finalizeTests("http://127.0.0.1:"+suite.strPort+"/api/v1/tickers/kmdd", 404)
 }
