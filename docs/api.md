@@ -1,5 +1,47 @@
 # Rest Api Doc
 
+## search dexstats information
+
+Retrieves an url from an explorer from a block, addresses or transaction
+
+**URL** : `/api/v1/dexstats/:coin/search`
+
+**Method** : `POST`
+
+**Auth required** : No
+
+**Permissions required** : None
+
+**Data constraints**
+
+```json
+{
+    "input": "[valid input (transaction, block hash, block height, or address]"
+}
+```
+
+**Data example**
+
+```json
+{
+    "input": "06d6747a49097830574cf8d33e399d8a8679e457493cd17390a80d0f916287bc"
+}
+```
+
+## Success Response
+
+**Code** : `200 OK`
+
+**Content example**
+
+```json
+{
+    "url_to_redirect": "http://kmd.explorer.dexstats.info/block/06d6747a49097830574cf8d33e399d8a8679e457493cd17390a80d0f916287bc"
+}
+```
+
+Curl command: `curl -X POST http://127.0.0.1:8080/api/v1/dexstats/kmd/search -H 'Content-Type: application/json'  -d '{"input": "06d6747a49097830574cf8d33e399d8a8679e457493cd17390a80d0f916287bc"}'`
+
 ## get information about all coins
 
 Get all the information about all the coins from the **komodo ecosystem**: ticker, last block, status, sync, notarized hash
