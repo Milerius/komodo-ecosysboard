@@ -39,6 +39,14 @@ To run the tests under coverage type the following instructions below:
 bash scripts/coverage.sh 
 ```
 
+## Running
+
+To run the program after building it type the following command:
+
+```
+./komodo_ecosysboard -config_path esb_config.json -logs_path logs
+```
+
 ## Deployment
 
 :construction:
