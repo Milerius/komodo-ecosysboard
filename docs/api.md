@@ -288,7 +288,7 @@ Curl command: `curl http://127.0.0.1:8080/api/v1/tickers/kmd`
 
 ### Error Response
 
-For a coin with ID `nonexistent` that exists in the **komodo** ecosystem.
+For a coin with ID `nonexistent` that doesnt exists in the **komodo** ecosystem.
 
 **Code** : `404 Not found`
 
