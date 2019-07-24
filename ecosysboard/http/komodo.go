@@ -37,6 +37,7 @@ type CoinInfos struct {
 	NodeIsSynced          bool                  `json:"node_is_synced"`
 	NotarizedHash         string                `json:"notarizedhash"`
 	NotarizedTransactions []string              `json:"notarizedtxid"`
+	Supply                float64               `json:"supply"`
 }
 
 func getInfoAboutSpecificCoin(key string, value string) CoinInfos {
@@ -47,6 +48,12 @@ func getInfoAboutSpecificCoin(key string, value string) CoinInfos {
 		res.Symbol = strings.ToUpper(key)
 	}
 	//! Last block hash
+	supply, err, status := CGetSupplyDexstats(key)
+	if err != nil || status != http.StatusOK {
+		currentCoin.Supply = 0.0
+	} else {
+		currentCoin.Supply = supply
+	}
 	currentCoin.BlockLastHash = CDiagnosticInfoFromNodeDexstats("getLastBlockHash", key).LastBlockHash.Lastblockhash
 	currentCoin.BlockInfo = CDiagnosticInfoFromNodeDexstats("getInfo", key).Infos
 	node := CNodeSyncStatusDexstats(key)

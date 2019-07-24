@@ -175,6 +175,13 @@ func (suite *HTTPDexstatsTestSuite) TestCNodeSyncStatusDexstats() {
 	assert.False(suite.T(), cmp.Equal(res, NodeSync{}), "should not be true")
 }
 
+func (suite *HTTPDexstatsTestSuite) TestCGetSupplyDexstats() {
+	supply, err, code := CGetSupplyDexstats("kmd")
+	assert.Nil(suite.T(), err, "should be nil")
+	assert.NotZero(suite.T(), supply, "should not be zero")
+	assert.Equal(suite.T(), http.StatusOK, code)
+}
+
 func (suite *HTTPDexstatsTestSuite) TestCBlockHashFromHeightDexstats() {
 	res := CBlockHashFromHeightDexstats("kmd", "1442250")
 	assert.False(suite.T(), cmp.Equal(res, BlockHashFromBlockHeightJson{}), "should not be true")
