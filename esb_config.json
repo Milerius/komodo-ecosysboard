@@ -24,6 +24,10 @@
     {
       "coin": "supernet",
       "coin_paprika_id": "unity-supernet"
+    },
+    {
+      "coin": "pirate",
+      "coin_paprika_id": "arrr-pirate"
     }
   ]
 }

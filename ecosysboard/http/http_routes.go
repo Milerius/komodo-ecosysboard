@@ -21,9 +21,10 @@ import (
 )
 
 const (
-	CoingGeckoEndpoint       = "https://api.coingecko.com/api/v3/"
-	CoinpaprikaEndpoint      = "https://api.coinpaprika.com/v1/"
-	DexStatsExplorerEndpoint = ".explorer.dexstats.info/insight-api-komodo/"
+	CoingGeckoEndpoint                     = "https://api.coingecko.com/api/v3/"
+	CoinpaprikaEndpoint                    = "https://api.coinpaprika.com/v1/"
+	DexStatsExplorerEndpoint               = ".explorer.dexstats.info/insight-api-komodo/"
+	DexStatsExplorerWithoutInsightEndpoint = ".explorer.dexstats.info/api/"
 )
 
 func InitRooter() *router.Router {
