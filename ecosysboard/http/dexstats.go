@@ -24,6 +24,7 @@ import (
 	"github.com/milerius/komodo-ecosysboard/ecosysboard/utils"
 	"github.com/valyala/fasthttp"
 	"net/http"
+	"strconv"
 )
 
 type BlockDetails struct {
@@ -220,6 +221,18 @@ func CBlockDetailsDexstats(coinName string, blockHash string) BlockDetails {
 	_ = json.Unmarshal(res.Body(), &blockDetails)
 	ReleaseInternalExecGet(req, res)
 	return blockDetails
+}
+
+func CGetSupplyDexstats(coinName string) (float64, error, int) {
+	fullEndpoint := "http://" + coinName + DexStatsExplorerWithoutInsightEndpoint + "/supply"
+	req, res := InternalExecGet(fullEndpoint, nil, false)
+	res.StatusCode()
+	supply, err := strconv.ParseFloat(string(res.Body()), 64)
+	if err != nil {
+		return 0, err, res.StatusCode()
+	}
+	ReleaseInternalExecGet(req, res)
+	return supply, nil, http.StatusOK
 }
 
 func BlockDetailsDexstats(ctx *fasthttp.RequestCtx) {
