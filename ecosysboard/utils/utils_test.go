@@ -17,9 +17,8 @@
 package utils
 
 import (
-	"testing"
-
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestIsKomodoAddress(t *testing.T) {
@@ -38,4 +37,9 @@ func TestIsLookLikeABlockHashOrTransactionId(t *testing.T) {
 	assert.Truef(t, IsLookLikeABlockHashOrTransactionId("000000014c0797b609abef168e8df13c03b92415f3a9b00c9f583013b5824b06"), "should be true")
 	assert.Truef(t, IsLookLikeABlockHashOrTransactionId("2909f0b98ca4c3812bb500bc79fa83d3b8c8159c8f4328ac80777968f59400c7"), "should be true")
 	assert.Falsef(t, IsLookLikeABlockHashOrTransactionId("RXrQPqU4SwARri1m2n7232TDECvjzXCJh4"), "should be false")
+}
+
+func TestIsPathExist(t *testing.T) {
+	assert.False(t, IsPathExist("/nonexistent"), "should be false")
+	assert.True(t, IsPathExist("/tmp"), "should be true")
 }

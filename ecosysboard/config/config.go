@@ -39,7 +39,7 @@ var GConfig *Config
 
 func LoadConfig(ConfigPath string) (*Config, error) {
 	if _, err := os.Stat(ConfigPath); os.IsNotExist(err) {
-		return nil, errors.New("configuration in the specified path doesn't exist")
+		return nil, errors.New("configuration in the specified path doesn't exist: ")
 	}
 	file, err := ioutil.ReadFile(ConfigPath)
 	if err != nil {
