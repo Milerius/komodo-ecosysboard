@@ -18,8 +18,8 @@ package http
 
 import (
 	"fmt"
+	"github.com/KomodoPlatform/komodo-ecosysboard/ecosysboard/config"
 	"github.com/kpango/glg"
-	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
 	"github.com/valyala/fasthttp"
 )
 
