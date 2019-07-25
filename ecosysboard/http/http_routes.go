@@ -25,6 +25,7 @@ const (
 	CoinpaprikaEndpoint                    = "https://api.coinpaprika.com/v1/"
 	DexStatsExplorerEndpoint               = ".explorer.dexstats.info/insight-api-komodo/"
 	DexStatsExplorerWithoutInsightEndpoint = ".explorer.dexstats.info/api/"
+	GitHubEndpoint                         = "https://api.github.com/"
 )
 
 func InitRooter() *router.Router {
