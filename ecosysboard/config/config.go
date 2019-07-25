@@ -31,6 +31,7 @@ type Config struct {
 		Coin          string `json:"coin"`
 		CoinPaprikaID string `json:"coin_paprika_id"`
 	} `json:"coins"`
+	GitReposList []string `json:"git_repos_list"`
 }
 
 var GConfig *Config

@@ -25,5 +25,33 @@
       "coin": "supernet",
       "coin_paprika_id": "unity-supernet"
     }
+  ],
+  "git_repos_list": [
+    "https://github.com/pbca26/komodo-omni-explorer.git",
+    "https://github.com/jl777/komodo.git",
+    "https://github.com/KomodoPlatform/atomicDEX-API.git",
+    "https://github.com/KomodoPlatform/BarterDEX.git",
+    "https://github.com/atomiclabs/hyperdex.git",
+    "https://github.com/jl777/chips3.git",
+    "https://github.com/jl777/chipsln.git",
+    "https://github.com/sg777/bet.git",
+    "https://github.com/jl777/coins.git",
+    "https://github.com/KomodoPlatform/Mastering_CryptoConditions.git",
+    "https://github.com/KomodoPlatform/dicoapp-e.git",
+    "https://github.com/KomodoPlatform/developer-docs.git",
+    "https://github.com/KomodoPlatform/Documentation.git",
+    "https://github.com/DeckerSU/komodo-explorers-install.git",
+    "https://github.com/DeckerSU/KomodoOcean.git",
+    "https://github.com/KomodoPlatform/marketmaker-cli.git",
+    "https://github.com/KomodoPlatform/atomicDEX-API.git",
+    "https://github.com/blackjok3rtt/ScaleTestV2.git",
+    "https://github.com/patchkez/scaletest_containers.git",
+    "https://github.com/smk762/txscl_vis.git",
+    "https://github.com/Meshbits/TxBlaster.git",
+    "https://github.com/webworker01/knomp.git",
+    "https://github.com/pbca26/agama-mobile.git",
+    "https://github.com/pbca26/agama-web.git",
+    "https://github.com/KomodoPlatform/EasyDEX-GUI.git",
+    "https://github.com/KomodoPlatform/Agama.git"
   ]
 }
