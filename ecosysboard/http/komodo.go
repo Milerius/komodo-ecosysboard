@@ -19,9 +19,9 @@ package http
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/KomodoPlatform/komodo-ecosysboard/ecosysboard/config"
 	"github.com/google/go-cmp/cmp"
 	"github.com/kpango/glg"
-	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
 	"github.com/valyala/fasthttp"
 	"net/http"
 	"sort"
