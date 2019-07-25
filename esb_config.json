@@ -57,5 +57,6 @@
     "https://github.com/pbca26/agama-web.git",
     "https://github.com/KomodoPlatform/EasyDEX-GUI.git",
     "https://github.com/KomodoPlatform/Agama.git"
-  ]
+  ],
+  "git_repos_location": "vendor"
 }
