@@ -17,12 +17,19 @@
 package http
 
 import (
+	"github.com/KomodoPlatform/komodo-ecosysboard/ecosysboard/config"
 	"github.com/google/go-cmp/cmp"
 	"github.com/stretchr/testify/assert"
+	"os"
+	"path/filepath"
 	"testing"
 )
 
 func TestCGetGithubOrgsRepos(t *testing.T) {
+	dir, _ := os.Getwd()
+	parent := filepath.Dir(dir)
+	_, err := config.LoadConfig(parent + "/config/samples/good_config.json")
+	assert.Nil(t, err, "should be nil ")
 	res := CGetGithubOrgsRepos("KomodoPlatform")
 	assert.False(t, cmp.Equal(res, GithubOrgRepos{}), "should not be true")
 	assert.NotZero(t, len(res), "Should not be empty")
