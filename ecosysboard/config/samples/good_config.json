@@ -60,5 +60,5 @@
       ]
     }
   ],
-  "git_repos_location": "vendor"
+  "git_repos_location": "/tmp/repos"
 }

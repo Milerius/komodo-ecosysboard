@@ -17,8 +17,9 @@
 package utils
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestIsKomodoAddress(t *testing.T) {
@@ -42,4 +43,13 @@ func TestIsLookLikeABlockHashOrTransactionId(t *testing.T) {
 func TestIsPathExist(t *testing.T) {
 	assert.False(t, IsPathExist("/nonexistent"), "should be false")
 	assert.True(t, IsPathExist("/tmp"), "should be true")
+}
+
+func TestIOReadDir(t *testing.T) {
+	dirs, err := IOReadDir("/tmp", "")
+	assert.Nil(t, err, "should be nil")
+	assert.NotEmptyf(t, dirs, "Should not be empty")
+	dirs, err = IOReadDir("/nonexistent", "")
+	assert.NotNil(t, err, "should not be nil")
+	assert.Empty(t, dirs, "Should be empty")
 }

@@ -68,7 +68,7 @@ func TestLoadConfig(t *testing.T) {
 					{"revs", "revs", []string{"KomodoPlatform"}},
 					{"supernet", "unity-supernet", []string{"KomodoPlatform"}},
 				},
-				GitReposDirectory: "vendor",
+				GitReposDirectory: "/tmp/repos",
 			},
 			wantErr: false,
 		},
