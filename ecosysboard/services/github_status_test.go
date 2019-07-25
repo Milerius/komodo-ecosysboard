@@ -35,6 +35,7 @@ func TestSetupGitRepos(t *testing.T) {
 	assert.Nil(t, os.RemoveAll(config.GConfig.GitReposDirectory), "should be nil")
 	config.GConfig.GitReposDirectory = "vendor"
 	assert.NotZero(t, SetupGitRepos(), "should clone more than 0 repository")
+	assert.Nil(t, os.RemoveAll(config.GConfig.GitReposDirectory), "should be nil")
 }
 
 func Test_gitClone(t *testing.T) {

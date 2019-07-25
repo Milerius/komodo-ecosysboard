@@ -47,6 +47,9 @@ func SetupGitRepos() uint64 {
 		for _, currentRepo := range currentCoin.GitReposList {
 			_, err := url.ParseRequestURI(currentRepo)
 			if err != nil {
+				if utils.IsPathExist(config.GConfig.GitReposDirectory + "/" + currentRepo) {
+					continue
+				}
 				res := http.CGetGithubOrgsRepos(currentRepo)
 				if len(res) == 0 {
 					continue
