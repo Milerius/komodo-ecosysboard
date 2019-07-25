@@ -40,7 +40,9 @@ func TestLoadConfig(t *testing.T) {
 			name: "Good path",
 			args: args{"samples/good_config.json"},
 			want: &Config{
-				HTTPPort: 8080,
+				HTTPPort:       8080,
+				GitBotClientId: "d1d63db76668da1141cd",
+				GitBotSecretId: "74afa0fe4b377bdfa1d41ddc33147c0042a952b1",
 				Coins: []struct {
 					Coin          string   `json:"coin"`
 					CoinPaprikaID string   `json:"coin_paprika_id"`

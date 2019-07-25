@@ -18,6 +18,7 @@ package http
 
 import (
 	"encoding/json"
+	"github.com/KomodoPlatform/komodo-ecosysboard/ecosysboard/config"
 	"time"
 )
 
@@ -129,7 +130,7 @@ type GithubOrgRepos []struct {
 
 func CGetGithubOrgsRepos(orgName string) GithubOrgRepos {
 	orgRepos := GithubOrgRepos{}
-	fullEndpoint := GitHubEndpoint + "orgs/" + orgName + "/repos"
+	fullEndpoint := GitHubEndpoint + "orgs/" + orgName + "/repos?client_id=" + config.GConfig.GitBotClientId + "&client_secret=" + config.GConfig.GitBotSecretId
 	req, res := InternalExecGet(fullEndpoint, nil, false)
 	_ = json.Unmarshal(res.Body(), &orgRepos)
 	ReleaseInternalExecGet(req, res)

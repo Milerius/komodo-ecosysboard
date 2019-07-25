@@ -26,8 +26,10 @@ import (
 )
 
 type Config struct {
-	HTTPPort int `json:"http_port"`
-	Coins    []struct {
+	HTTPPort       int    `json:"http_port"`
+	GitBotClientId string `json:"git_bot_client_id"`
+	GitBotSecretId string `json:"git_bot_secret_id"`
+	Coins          []struct {
 		Coin          string   `json:"coin"`
 		CoinPaprikaID string   `json:"coin_paprika_id"`
 		GitReposList  []string `json:"git"`
