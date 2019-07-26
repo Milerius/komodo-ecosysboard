@@ -21,7 +21,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
+	"github.com/KomodoPlatform/komodo-ecosysboard/ecosysboard/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"github.com/valyala/fasthttp"

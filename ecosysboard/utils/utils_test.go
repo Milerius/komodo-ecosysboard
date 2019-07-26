@@ -39,3 +39,17 @@ func TestIsLookLikeABlockHashOrTransactionId(t *testing.T) {
 	assert.Truef(t, IsLookLikeABlockHashOrTransactionId("2909f0b98ca4c3812bb500bc79fa83d3b8c8159c8f4328ac80777968f59400c7"), "should be true")
 	assert.Falsef(t, IsLookLikeABlockHashOrTransactionId("RXrQPqU4SwARri1m2n7232TDECvjzXCJh4"), "should be false")
 }
+
+func TestIsPathExist(t *testing.T) {
+	assert.False(t, IsPathExist("/nonexistent"), "should be false")
+	assert.True(t, IsPathExist("/tmp"), "should be true")
+}
+
+func TestIOReadDir(t *testing.T) {
+	dirs, err := IOReadDir("/tmp", "")
+	assert.Nil(t, err, "should be nil")
+	assert.NotEmptyf(t, dirs, "Should not be empty")
+	dirs, err = IOReadDir("/nonexistent", "")
+	assert.NotNil(t, err, "should not be nil")
+	assert.Empty(t, dirs, "Should be empty")
+}
