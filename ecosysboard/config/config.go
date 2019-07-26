@@ -61,8 +61,6 @@ func LoadConfig(ConfigPath string) (*Config, error) {
 	sort.SliceStable(cfg.Coins, func(i, j int) bool {
 		return cfg.Coins[i].Coin < cfg.Coins[j].Coin
 	})
-	cfg.GitBotClientId = "d1d63db76668da1141cd"
-	cfg.GitBotSecretId = "74afa0fe4b377bdfa1d41ddc33147c0042a952b1"
 	GConfig = cfg
 	return cfg, nil
 }
