@@ -16,7 +16,11 @@
 
 package utils
 
-import "regexp"
+import (
+	"io/ioutil"
+	"os"
+	"regexp"
+)
 
 func IsLookLikeAKomodoAddress(address string) bool {
 	var re = regexp.MustCompile(`(?m)^[R][a-km-zA-HJ-NP-Z1-9]{27,34}$`)
@@ -31,6 +35,30 @@ func IsLookLikeABlock(input string) bool {
 func IsLookLikeABlockHashOrTransactionId(input string) bool {
 	var re = regexp.MustCompile(`(?m)^[0-9a-f]{64}$`)
 	return re.MatchString(input)
+}
+
+func IsPathExist(path string) bool {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+
+func IOReadDir(root string, prefix string) ([]string, error) {
+	var files []string
+	fileInfo, err := ioutil.ReadDir(root)
+	if err != nil {
+		return files, err
+	}
+
+	for _, file := range fileInfo {
+		if len(prefix) > 0 {
+			files = append(files, prefix+"/"+file.Name())
+		} else {
+			files = append(files, file.Name())
+		}
+	}
+	return files, nil
 }
 
 //000000014c0797b609abef168e8df13c03b92415f3a9b00c9f583013b5824b06

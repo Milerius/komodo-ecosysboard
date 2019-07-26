@@ -18,7 +18,7 @@ package http
 
 import (
 	"fmt"
-	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
+	"github.com/KomodoPlatform/komodo-ecosysboard/ecosysboard/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/valyala/fasthttp"
 	"testing"

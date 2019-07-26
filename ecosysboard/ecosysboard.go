@@ -19,10 +19,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/KomodoPlatform/komodo-ecosysboard/ecosysboard/config"
+	"github.com/KomodoPlatform/komodo-ecosysboard/ecosysboard/http"
+	"github.com/KomodoPlatform/komodo-ecosysboard/ecosysboard/log"
 	"github.com/kpango/glg"
-	"github.com/milerius/komodo-ecosysboard/ecosysboard/config"
-	"github.com/milerius/komodo-ecosysboard/ecosysboard/http"
-	"github.com/milerius/komodo-ecosysboard/ecosysboard/log"
 )
 
 func main() {
