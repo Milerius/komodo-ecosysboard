@@ -100,7 +100,6 @@ func gitClone(urlRepo string, nbReposCloned *uint64, wg *sync.WaitGroup) {
 		}
 	} else {
 		_ = glg.Infof("Repository %s already cloned", urlRepo)
-		//! If it's already cloned then pull ?
 	}
 	wg.Done()
 }
